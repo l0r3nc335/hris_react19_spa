@@ -66,3 +66,14 @@ return (
     </>
 )
 ```
+
+## CVA class-variance-authority
+```sh
+  npm i class-variance-authority
+```
+
+Make file/Directory
+    
+    ./src/components/button.tsx
+    check the code ther about 'buttonVariants'.
+
