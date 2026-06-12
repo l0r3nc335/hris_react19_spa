@@ -72,8 +72,10 @@ return (
   npm i class-variance-authority
 ```
 
-Make file/Directory
+Make file/Directory and check the code there about 'buttonVariants'.  
     
     ./src/components/button.tsx
-    check the code ther about 'buttonVariants'.
 
+Implement the buttons variants in
+
+    src\App.tsx
