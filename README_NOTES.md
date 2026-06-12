@@ -35,4 +35,34 @@ test in code if its working
       </div>
     </>
   )
-```    
+```
+
+## CLSX - Conditional join class string
+```sh
+    npm i clsx
+    npm i tailwind-merge
+```
+
+Make file/directory
+
+        ./src/lib/utils.ts
+```jsx
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs))
+}
+```
+
+Test conditional joining of class
+```jsx
+return (
+    <>
+        <div className={cn('bg-red-100', true && 'p-4', 'p-2')}>
+            <h1>This is tailwindcss in action</h1>
+            <h2>conditional joining of class string (true && 'p-4')</h2>
+        </div>
+    </>
+)
+```
