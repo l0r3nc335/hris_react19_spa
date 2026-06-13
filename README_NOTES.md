@@ -174,3 +174,31 @@ export default function TestLucideIcon() {
 
 ### Lucide Icons
     https://lucide.dev/icons/
+
+## ZOD
+Zod is a TypeScript-first schema validation library that bridges the gap between static type safety and runtime data integrity. In React, it is the industry standard for validating form inputs, API responses, and environment variables, typically paired with React Hook Form for a completely type-safe form experience.
+
+```sh
+    npm install zod
+```
+Test Zod
+```jsx 
+    import {z} from 'zod'
+    
+    const userSchema = z.object({
+        id: z.number(),
+        email: z.email()
+    })
+    
+    export default function TestZod(){
+        const result = userSchema.safeParse({
+            id: 1,
+            email: "lorenzo.garcia.tlc@gmail.com"
+        })
+    
+        console.log("Zod validation success", result.success)
+        return (
+            <></>
+        )
+    }
+```
