@@ -255,3 +255,48 @@ Implement React Hook Form:
         )
     }
 ```
+
+## Axios
+Axios is a popular, promise-based HTTP client library used in React applications to send asynchronous HTTP requests to REST endpoints and backend servers.
+
+https://axios.rest/pages/getting-started/first-steps
+```sh
+    npm install axios
+```
+
+Manually Create Directory
+
+    src/api/axios.ts
+```ts
+    import axios from 'axios'
+    
+    export const api = axios.create({
+        baseURL: 'https://api.restful-api.dev', //sample only
+        timeout: 5000,
+        headers: {
+            'Content-type': 'application/json',
+        }
+    })
+```
+Verification Component 
+
+    src/components/TestAxios.tsx
+
+```tsx
+    import { useState, useEffect } from "react"
+    import { api } from '@/api/axios'
+    
+    export default function TestAxios() {
+        const [data, setData] = useState('')
+        const [error, setError] = useState('')
+    
+        useEffect(() => {
+            api.get('/objects/7')
+                .then(res => setData(res.data))
+                .catch(err => setError(err.message))
+        }, [])
+    
+        if (error) return <p className="text-red-500">Axios Error: {error}</p>
+        return <p className="p-2 bg-gray-100 rounded text-black">Axios Data: {data.name || 'Loading...'}</p>
+    }
+```
