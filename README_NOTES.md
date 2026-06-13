@@ -131,3 +131,24 @@ Will create a components/ui/button.tsx
 
 ### Other ShadCn components
     https://ui.shadcn.com/docs/components
+
+## Lucide React (ICON)
+Open-source icon library for React that provides over 1,600 customizable, vector-based SVG icons.
+```sh
+    npm install lucide-react
+```
+
+### test Lucide React (ICONS)
+```jsx 
+import { ArrowRight, CheckCircle } from 'lucide-react'
+
+export default function TestLucideIcon() {
+    return (
+        <div className="flex gap-4 p-4 text-green-600">
+            <CheckCircle size={40} />
+            <span>Lucide Icon loaded Successfully</span>
+            <ArrowRight size={24} />
+        </div>
+    )
+}
+```
