@@ -6,6 +6,7 @@ import TestLucideIcon from '@/components/TestComponents/TestLucideIcon'
 import TestZod from './components/TestComponents/TestZod'
 import TestReactHookForm from '@/components/TestComponents/TestReactHookForm'
 import TestAxios from './components/TestComponents/TestAxios'
+import TestTanStackQeury from './components/TestComponents/TestTanStackQeury'
 //import { cn } from './lib/utils'
 //import {Button} from '@/components/ui/button'
 
@@ -20,6 +21,7 @@ function App() {
       <TestZod />
       <TestReactHookForm />
       <TestAxios />
+      <TestTanStackQeury />
     </>
   )
 }

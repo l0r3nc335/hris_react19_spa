@@ -300,3 +300,60 @@ Verification Component
         return <p className="p-2 bg-gray-100 rounded text-black">Axios Data: {data.name || 'Loading...'}</p>
     }
 ```
+
+## TanStack Query
+A powerful, protocol-agnostic asynchronous state management library designed to simplify fetching, caching, synchronizing, and updating server state in web applications.
+```sh
+    npm install @tanstack/react-query
+```
+
+Wrap your src/main.tsx application tree with the query provider
+
+    src\main.tsx
+```jsx
+    import { StrictMode } from 'react'
+    import { createRoot } from 'react-dom/client'
+    import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+    import './index.css'
+    import App from './App.tsx'
+    
+    const queryClient = new QueryClient()
+    
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </StrictMode>,
+    )
+```
+
+Verification Component
+
+    src/components/TestTanStackQuery.tsx
+```jsx
+    import { useQuery } from '@tanstack/react-query'
+    import { api } from '@/api/axios'
+    
+    export default function TestTanStackQeury() {
+        const { data, isPending, error } = useQuery({
+            queryKey: ['githubZen'],
+            queryFn: async () => {
+                const response = await api.get('/status/github')
+                return response.data as string
+            }
+        })
+    
+        console.log('data')
+        console.log(data)
+    
+        if (isPending) return <p>Query is loading cache...</p>
+        if (error) return <p className="text-red-500">Query Error: {error.message}</p>
+        return <p className='p-4 bg-green-50 rounded text-green-800 font-medium'>TanStack + Axios: {data.data?.name}</p>
+    }
+```
+
+
+
+
+
