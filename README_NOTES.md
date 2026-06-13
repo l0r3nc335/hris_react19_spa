@@ -14,6 +14,23 @@
     npm run dev
 ```
 
+# THE STACK
+```text
+•	TypeScript ---------------------> OK
+•	React --------------------------> OK
+•	Redux Toolkit ------------------>
+•	TanStack Query -----------------> 
+•	Radix UI -----------------------> OK
+•	ShadCN -------------------------> OK
+•	Tailwind CSS -------------------> OK
+•	Lucide React -------------------> OK
+•	class-variance-authority (CVA) -> OK
+•	tailwind-merge -----------------> OK
+•	clsx ---------------------------> OK
+•	React Hook Form ----------------> OK
+•	Zod  ---------------------------> OK
+```
+
 # SETUP THE STACK
 
 ## Tailwind
