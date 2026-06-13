@@ -104,3 +104,30 @@ export default function TestRadix(){
     )
 }
 ```
+
+## shadcn/ui Initialization
+```sh 
+  npx shadcn@latest init
+```
+Selections:
+
+    -Radix
+    -Select Presets, see: https://ui.shadcn.com/create?preset
+        Vega
+        Maia
+        Lyra
+        Mira
+        Luma
+        Sera
+        Rhea
+        Custom
+    -
+
+### Sample ShadCn Component Installation
+Will create a components/ui/button.tsx
+```sh
+  npx shadcn@latest add button
+```
+
+### Other ShadCn components
+    https://ui.shadcn.com/docs/components
