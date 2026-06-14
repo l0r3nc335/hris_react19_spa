@@ -18,9 +18,9 @@
 ```text
 •	TypeScript ---------------------> OK
 •	React --------------------------> OK
-•	Redux Toolkit ------------------>
-•   Axios --------------------------> 
-•	TanStack Query -----------------> 
+•	Redux Toolkit ------------------> OK
+•	Axios --------------------------> OK
+•	TanStack Query -----------------> OK
 •	Radix UI -----------------------> OK
 •	ShadCN -------------------------> OK
 •	Tailwind CSS -------------------> OK
@@ -31,9 +31,58 @@
 •	React Hook Form ----------------> OK
 •	Zod  ---------------------------> OK
 ```
+## Core Language & Framework
+### React
+https://react.dev/learn
+### Typescript
+https://www.typescriptlang.org/
+
+
+## State Management
+### Redux
+https://react-redux.js.org/
+
+
+## API & Server State
+### Axios
+https://axios.rest/pages/getting-started/first-steps
+### TanStack Query
+https://tanstack.com/query/latest
+
+## UI Components & Design System
+### Radix UI
+https://www.radix-ui.com/themes/docs/overview/getting-started
+### ShadCN
+https://ui.shadcn.com/docs/components
+
+
+## Styling
+### Tailwind CSS
+https://tailwind.build/classes?search=border
+
+
+## Icons
+### Lucide React
+https://lucide.dev/guide/react/
+
+
+## Component Variants & Class Utilities
+### Class Variance Authority (CVA)
+https://cva.style/docs/examples/react/tailwind-css
+### Tailwind merge
+https://www.npmjs.com/package/tailwind-merge
+### Clsx
+https://www.npmjs.com/package/clsx
+
+## Forms & Validation
+### React Hook Form
+https://react-hook-form.com/
+### Zod
+https://zod.dev/basics
+
+
 
 # SETUP THE STACK
-
 ## Tailwind
 ```sh
     npm i tailwindcss @tailwindcss/vite
