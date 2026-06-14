@@ -402,7 +402,87 @@ Verification Component
     }
 ```
 
+## Redux Toolkit
+```sh 
+  npm install @reduxjs/toolkit react-redux
+```
+
+Create a global local-state store
+    
+    src/store/store.ts
+
+```ts
+    import { createSlice, configureStore } from '@reduxjs/toolkit'
+    import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+    
+    const uiSlice = createSlice({
+        name: 'ui',
+        initialState: { sidebarOpen: false },
+        reducers: {
+            toggleSidebar: (state) => { state.sidebarOpen = !state.sidebarOpen }
+        }
+    })
+    
+    export const { toggleSidebar } = uiSlice.actions
+    export const store = configureStore({ reducer: { ui: uiSlice.reducer } })
+    
+    export type RootState = ReturnType<typeof store.getState>
+    export type AppDispatch = typeof store.dispatch
+    
+    export const useAppDispatch = () =>  useDispatch<AppDispatch>()
+    export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+```    
+
+Update 
+
+    src/main.ts
 
 
+```ts
+    import { StrictMode } from 'react'
+    import { createRoot } from 'react-dom/client'
+    import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+    import './index.css'
+    import App from './App.tsx'
+    import { Provider } from 'react-redux'
+    import { store } from '@/store/store.ts'
+    
+    const queryClient = new QueryClient()
+    
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
+        </Provider>
+      </StrictMode>,
+    )
+```
 
+Verification Component 
+    
+    src/components/ReduxTest.tsx
 
+```tsx
+    import { useAppDispatch, useAppSelector, toggleSidebar } from '@/store/store.ts'
+    import { Button } from '@/components/ui/button'
+    
+    export default function TestRedux() {
+        const isSidebarOpen = useAppSelector((state) => state.ui.sidebarOpen)
+        const dispatch = useAppDispatch()
+    
+        return(
+            <div className="p-4 border flex flex-col gap-2 max-w-xs">
+                <h1 className='text-2xl'>Redux Test</h1>
+                <p>Sidebar Status: {isSidebarOpen ? "OPEN" : "CLOSED"}</p>
+                <Button
+                    variant="default"
+                    onClick={() => dispatch( toggleSidebar() )}            
+                >
+                    Toggle Local UI State
+                </Button>
+            </div>
+        )
+    }
+```

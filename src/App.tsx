@@ -7,6 +7,7 @@ import TestZod from './components/TestComponents/TestZod'
 import TestReactHookForm from '@/components/TestComponents/TestReactHookForm'
 import TestAxios from './components/TestComponents/TestAxios'
 import TestTanStackQeury from './components/TestComponents/TestTanStackQeury'
+import TestRedux from './components/TestComponents/TestRedux'
 //import { cn } from './lib/utils'
 //import {Button} from '@/components/ui/button'
 
@@ -22,6 +23,7 @@ function App() {
       <TestReactHookForm />
       <TestAxios />
       <TestTanStackQeury />
+      <TestRedux />
     </>
   )
 }
