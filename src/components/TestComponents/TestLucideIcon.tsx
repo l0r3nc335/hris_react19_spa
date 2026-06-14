@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle } from 'lucide-react'
+import { ArrowRight, CheckCircle, LayoutDashboard, Users } from 'lucide-react'
 
 export default function TestLucideIcon() {
     return (
@@ -6,6 +6,8 @@ export default function TestLucideIcon() {
             <CheckCircle size={40} />
             <span>Lucide Icon loaded Successfully</span>
             <ArrowRight size={24} />
+            <LayoutDashboard size={24} />
+            <Users size={24} />
         </div>
     )
 }
