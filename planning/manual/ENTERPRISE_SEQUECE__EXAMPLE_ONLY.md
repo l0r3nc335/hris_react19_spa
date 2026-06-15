@@ -5,22 +5,29 @@
 Example:
 
     src/
-    ├── api/
-    ├── app/
+    ├── app/              # App shell, providers
     ├── assets/
-    ├── components/
-    │   ├── ui/
-    │   └── common/
-    ├── features/
+    ├── components/       # Shared app components (EntityListPage, dialogs, etc.)
+    │   └── ui/           # Some shadcn-style pieces (e.g. form.tsx)
+    ├── constants/
     ├── hooks/
-    ├── layouts/
-    ├── pages/
+    ├── layouts/          # AuthLayout, DashboardLayout
+    ├── lib/              # queryClient, queryKeys
+    ├── modules/          # Feature domains (NOT "features/" or top-level "pages/")
+    │   ├── auth/pages/
+    │   ├── employees/pages/
+    │   ├── employees/hooks.ts
+    │   └── ...
+    ├── queries/          # TanStack Query hooks
     ├── routes/
-    ├── services/
+    ├── services/         # HTTP client + api/* (not top-level "api/")
+    │   └── api/
+    ├── slices/           # Redux (auth)
     ├── store/
+    ├── test/
     ├── types/
-    ├── utils/
-    └── constants/
+    ├── ui/               # Design system (Button, Modal, Dropdown, etc.)
+    └── utils/
 
 
 # 2. App Shell / Layouts
