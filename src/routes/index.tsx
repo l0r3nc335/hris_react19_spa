@@ -32,8 +32,8 @@ export const router = createBrowserRouter([
         path: '/auth',
         element: <AuthLayout />,
         children: [
-            { path: 'login', element: <Suspense> <Lazy.LoginPage /> </Suspense> },
-            {}
+            { path: 'login', index: true, element: <Suspense> <Lazy.LoginPage /> </Suspense> },
+            { path: '', element: <Suspense> <Lazy.LoginPage /> </Suspense> }
         ]
     },
     {
