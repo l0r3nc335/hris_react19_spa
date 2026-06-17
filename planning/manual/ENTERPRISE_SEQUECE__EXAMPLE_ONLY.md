@@ -84,33 +84,185 @@ Create the skeleton:
     ├── PageShell.tsx
     ├── PublicNavbar.tsx
 
-### Components Layout
+-----------------------------------------------------------------------------------
 
-    company logo
-    navbar
-    sidebar
-    header
-    footer
-    responsive behavior
 
 # 3. Routing FE
 
+Install:
+```sh
+    npm install react-router-dom
+```
+
+Create the skeleton:
+
+    /routes
+    ├── index.tsx
+    ├── lazyRoutes.ts
+    ├── protectedRoutes.tsx
+
+    /constants
+    ├── routes.ts
+
+    /modules
+    ├── public
+    │   ├── pages/LandingPage
+    ├── auth
+    │   ├── pages/LoginPage
+    ├── dashboard
+    │   ├── pages/DashboardPage
+
+    /components
+    │   ├── ui/skeleton.tsx
+    ├── PageLoader.tsx
+
+### /components/ui/skeleton
+creates skeleton ui for the Lazy.AnyPage and used in the loader
+```tsx
+    import { cn } from '@/lib/utils'
+    export default function Skeleton({className, ...props}: React.ComponentProps<"div">){
+        return(
+            <div
+                data-slot="skeleton"
+                className={cn("animate-pulse rounded-md bg-muted", className)}
+                {...props}
+            />
+        )
+    }
+```    
+### /components/PageLoader.tsx
+```tsx
+    import Skeleton from "@/components/ui/skeleton"
+    export function PageLoader(): React.JSX.Element {
+        return (
+            <div className="flex min-h-[200px] flex-col gap-3 p-4">
+                <Skeleton className="h-8 w-1/3" />
+                <div className="mt-4 space-y-3">
+                    <Skeleton className="h-10 w-full" />
+                </div>
+            </div>
+        )
+    }
+```
+
+### /constants/routes.ts:
+```ts
+    export const ROUTES = {
+       landing: '/',
+       login: '/auth/login',
+       dashboard: '/dashboard' 
+    } as const
+```
+
+## Layouts for route - /src/layouts
+### AuthLayout
+```tsx
+    import { Outlet } from 'react-router-dom'
+    export default function AuthLayout(): React.JSX.Element {
+        return (
+            <div className="flex min-h-screen flex-col bg-muted">
+                <header className="border-b border-border bg-card px-6 py-4">
+                    Header
+                </header>
+                <div className="flex flex-1 items-center justify-center p-4">
+                    <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 shadow-sm">
+                    <Outlet />
+                    </div>
+                </div>
+            </div>
+        )
+}
+```
+### PublicLayout
+```tsx
+    import { Outlet } from 'react-router-dom'
+    export default function PublicLayout(): React.JSX.Element {
+        return (<Outlet />)
+    }
+```
+### DashboardPage
+```tsx 
+    export function DashboardPage(): React.JSX.Element {
+        return(<h1>DASHBOARD - this should be protected by ahout</h1>)
+    }
+```
+
+## ROUTES
+### /routes/lazyRoutes.ts
+```ts
+    import { lazy } from 'react'
+    export const LandingPage = lazy(() =>
+        import('@/modules/public/pages/LandingPage').then((m) => ({ default: m.LandingPage })),
+    )
+    export const LoginPage = lazy(() =>
+        import('@/modules/auth/pages/LoginPage').then((m) => ({default: m.LoginPage}))
+    )
+    export const Dashboard = lazy (() =>
+        import('@/modules/dashboard/pages/DashboardPage').then((m) => ({default: m.DashboardPage}))
+    )
+```
+### /routes/protectedRoutes.ts
+```tsx
+    export default function ProtectedRoute(): React.JSX.Element {
+        return(<></>)
+    }
+```    
+
+### /routes/index.tsx
+Includes: Suspense wrap, lazy loading and Page Loader
+```tsx
+    import AuthLayout from "@/layouts/AuthLayout";
+    import DashboardLayout from "@/layouts/DashboardLayout";
+    import PublicLayout from "@/layouts/PublicLayout";
+    import { Suspense, type ReactNode } from "react";
+    import { createBrowserRouter, Navigate } from 'react-router-dom'
+    interface SuspenseWrapProps {
+        children: ReactNode
+    }
+    function SuspenseWrapProp({children}: SuspenseWrapProps): React.JSX.Element
+    {
+        return<Suspense fallback="">{children}</Suspense>
+    }
+    export const router = createBrowserRouter([
+        {
+            element: <PublicLayout />,
+            children: [
+                //e.g:
+                //{ index: true, element: <SuspenseWrap><Lazy.LandingPage /></SuspenseWrap> },
+                //{ path: 'about', element: <SuspenseWrap><Lazy.AboutPage /></SuspenseWrap> },
+                {},
+                {}
+            ]
+        },
+        {
+            path: '/auth',
+            element: <AuthLayout />,
+            children: [
+                {},
+                {}
+            ]
+        },
+        {
+            path: '/dashboard',
+            element: <DashboardLayout />,
+            children: [
+                {},
+                {}
+            ]
+        }
+    ])
+```
+
+### src/App.tsx updates
+```tsx
+    import { RouterProvider } from 'react-router-dom'
+    import { router } from '@/routes/index'
+    export default function App(): React.JSX.Element {
+        return (<RouterProvider router={router} />)
+    }
+```
+
 Example:
-
-    /
-    ├── Login
-    ├── Register
-    ├── Forgot Password
-    
-    /dashboard
-    /users
-    /roles
-    /settings
-
-Also:
-
-    ProtectedRoute
-    PublicRoute
 
 # 4. Authentication Foundation
 
