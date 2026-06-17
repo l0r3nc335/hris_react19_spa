@@ -1,3 +1,4 @@
-export default function PublicLayout() {
+export default function PublicLayout(): React.JSX.Element
+{
     return (<></>)
 }

@@ -1,3 +1,4 @@
-export default function DashboardLayout() {
+export default function DashboardLayout(): React.JSX.Element
+{
     return (<></>)
 }
