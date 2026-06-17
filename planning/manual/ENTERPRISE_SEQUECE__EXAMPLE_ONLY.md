@@ -29,25 +29,62 @@ Example:
     ├── ui/               # Design system (Button, Modal, Dropdown, etc.)
     └── utils/
 
+## Decide:
+This prevents refactoring later.
 
-# 2. App Shell / Layouts
+    • Module-based architecture
+    • Redux boundaries
+    • Query boundaries
+    • Layout boundaries
+    • API conventions
+    • Folder naming conventions
+------------------------------------------------------
+
+# 2. LAYOUTS AND COMPONENTS LAYOUT
 
 ### Build the application's skeleton.
 
+## LAYOUTS
+Create the skeleton:
+
+    layouts/
+    ├── AuthLayout.tsx
+    ├── DashboardLayout.tsx
+    ├── PublicLayout.tsx
 Example:
 
-    GuestLayout
-    ├── Header
-    ├── Main Content
-    └── Footer
+        AuthLayout.tsx
+        ├── Header
+        ├── Outlet / Content
+        └── Footer
     
-    AuthenticatedLayout
-    ├── Sidebar
-    ├── Header
-    ├── Content
-    └── Footer
+        DashboardLayout.tsx
+        ├── AppSidebar
+        ├── AppHeader
+        ├── Outlet / Content
+        └── AppFooter
+    
+        PublicLayout.tsx
+        ├── Sidebar
+        ├── Header
+        ├── Content
+        └── Footer
 
-### lay-outing
+## COMPONENTS LAYOUT
+Create the skeleton:
+    
+    components/layout
+    ├── AppBreadcrumbs.tsx
+    ├── AppFooter.tsx
+    ├── AppHeader.tsx
+    ├── AppSidebar.tsx
+    ├── GlobalSearch.tsx
+    ├── MessageInbox.tsx
+    ├── NotificationBell.tsx
+    ├── PageShell.tsx
+    ├── PublicNavbar.tsx
+
+### Components Layout
 
     company logo
     navbar
