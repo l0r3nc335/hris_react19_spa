@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector, toggleSidebar } from '@/store/store.ts'
+import { useAppDispatch, useAppSelector, toggleSidebar } from '@/store/store'
 import { Button } from '@/components/ui/button'
 
 export default function TestRedux() {

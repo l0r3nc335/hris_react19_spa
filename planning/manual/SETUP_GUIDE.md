@@ -1,14 +1,15 @@
-# HRIS Enterprise Frontend — Setup Guide
+# HRIS Enterprise Frontend — Build Guide
 
-A step-by-step guide for setting up and extending this codebase. It mirrors the standard enterprise React scaffold order (structure → layouts → routing → auth → shared UI → testing → state → API → queries → features) but is grounded in **this repo's actual files, conventions, and patterns**.
+**Literal build-order manual.** Follow sections **1 → 12** in sequence when scaffolding this app from scratch. Each step lists the files to create and the minimum code to wire before moving on.
 
-For quick start commands, see [README.md](./README.md).
+- Quick start commands: [README.md](./README.md)
+- Extended reference (all topics, more detail): [SETUP_GUIDE.md](./SETUP_GUIDE.md)
 
 ---
 
 ## Prerequisites
 
-**Stack (already configured in this project):**
+**Stack:**
 
 | Layer | Technology |
 |-------|------------|
@@ -21,7 +22,6 @@ For quick start commands, see [README.md](./README.md).
 | Forms (auth) | react-hook-form + zod |
 | UI primitives | shadcn/ui + Radix (`radix-nova` style) |
 | Toasts | Sonner |
-| Monitoring | Sentry (optional) |
 
 **Environment:**
 
@@ -30,115 +30,176 @@ npm install
 cp .env.example .env
 ```
 
-`.env` variables:
-
 | Variable | Purpose |
 |----------|---------|
 | `VITE_API_BASE_URL` | Backend origin (default `http://localhost:3000`) |
 | `VITE_APP_ENV` | Environment label for Sentry |
 | `VITE_SENTRY_DSN` | Optional error reporting |
 
-**Path alias:** `@/*` → `src/*` (configured in `vite.config.ts` and `tsconfig.app.json`).
+**Path alias:** `@/*` → `src/*`
 
-### Bootstrap flow
-
-The app boots in this order:
+### Bootstrap flow (runtime — wired in §6)
 
 ```mermaid
 flowchart TD
   mainTsx[main.tsx] --> bootstrapAuth[bootstrap/auth.ts]
   bootstrapAuth --> setHandlers[setAuthHandlers + fetchMe]
   mainTsx --> AppProviders[app/AppProviders.tsx]
-  AppProviders --> ReduxProvider[Redux Provider]
-  AppProviders --> CoreProviders[Query + Theme + Tooltip + ErrorBoundary]
   AppProviders --> AuthGate[modules/auth/AuthGate.tsx]
-  AppProviders --> Toaster[Sonner Toaster]
-  AuthGate --> AppTsx[app/App.tsx]
-  AppTsx --> Router[RouterProvider]
-  Router --> Routes[routes/index.tsx]
+  AuthGate --> AppTsx[app/App.tsx RouterProvider]
+  AppTsx --> Routes[routes/index.tsx]
 ```
 
 | File | Role |
 |------|------|
-| [`src/main.tsx`](src/main.tsx) | Calls `bootstrapAuth(store)` before render; mounts `<AppProviders>` + `<App />` in StrictMode |
-| [`src/bootstrap/auth.ts`](src/bootstrap/auth.ts) | Wires `setAuthHandlers` (401 refresh) and dispatches `fetchMe` when a token exists |
-| [`src/app/AppProviders.tsx`](src/app/AppProviders.tsx) | Redux `Provider`, composed providers, `AuthGate`, `Toaster` |
-| [`src/app/providers/`](src/app/providers/) | `QueryProvider`, `ThemeProvider`, `TooltipProvider`, `ErrorBoundaryProvider` |
-| [`src/modules/auth/AuthGate.tsx`](src/modules/auth/AuthGate.tsx) | Full-page loader while session restores (`fetchMe` in flight) |
-| [`src/app/App.tsx`](src/app/App.tsx) | `<RouterProvider router={router} />` only |
+| [`src/main.tsx`](src/main.tsx) | `bootstrapAuth(store)` then render |
+| [`src/bootstrap/auth.ts`](src/bootstrap/auth.ts) | Auth handlers + `fetchMe` on load |
+| [`src/app/AppProviders.tsx`](src/app/AppProviders.tsx) | Redux, providers, `AuthGate`, `Toaster` |
+| [`src/app/App.tsx`](src/app/App.tsx) | `<RouterProvider />` only |
 
 ---
 
 # 1. Project Structure
 
-### Before layouts, decide your folders.
-
-This repo uses a **module-based** layout. The actual `src/` tree:
+### Before anything else, decide your folders.
 
 ```
 src/
-├── app/              # App shell
-│   ├── App.tsx       # RouterProvider only
-│   ├── AppProviders.tsx
-│   ├── instrumentation.ts  # Sentry init
-│   └── providers/    # QueryProvider, ThemeProvider, etc.
-├── assets/           # Static SVGs
-├── bootstrap/        # Pre-render setup (auth handlers + session restore)
-│   └── auth.ts
-├── components/       # Shared app components
-│   ├── layout/       # AppHeader, AppSidebar, PublicNavbar, etc.
-│   └── ui/           # shadcn/Radix primitives (button, form, table, …)
-├── constants/        # routes, endpoints, navigation, permissions, routeMeta
-├── hooks/            # Typed Redux hooks, useEntityCrudPage, usePermission, useTheme
-├── layouts/          # PublicLayout, AuthLayout, DashboardLayout
-├── lib/              # queryClient, queryKeys, cn()
-├── modules/          # Feature domains (30+ modules) — NOT features/ or top-level pages/
-│   └── auth/         # AuthGate, pages/ (Login, Register, Forgot), schemas.ts
-├── queries/          # TanStack Query hooks (factory + per-domain)
-├── routes/           # index.tsx, lazyRoutes.tsx, protectedRoute.tsx
-├── services/         # httpClient, errors, logger
-│   └── api/          # Typed API modules — NOT top-level api/
-├── slices/           # Redux: authSlice, uiSlice
-├── store/            # configureStore + rootReducer
-├── test/             # Vitest setup, utils, fixtures, unit/, integration/
-├── types/            # Shared TypeScript types
-├── ui/               # Design-system barrel (re-exports shadcn + thin wrappers)
-└── utils/            # cn, normalize, thunkError helpers
+├── app/              # App.tsx, AppProviders.tsx, providers/, instrumentation.ts
+├── bootstrap/        # bootstrapAuth (§6)
+├── components/
+│   ├── layout/       # Shell chrome (§8)
+│   └── ui/           # shadcn primitives (§2)
+├── constants/        # routes, endpoints, navigation, permissions
+├── hooks/
+├── layouts/          # PublicLayout, AuthLayout, DashboardLayout (§3, §8)
+├── lib/              # queryClient, queryKeys
+├── modules/          # Feature domains — NOT features/ or top-level pages/
+│   └── auth/         # AuthGate, pages/, schemas.ts (§6)
+├── queries/          # TanStack Query hooks (§11)
+├── routes/           # index.tsx, lazyRoutes.tsx, protectedRoute.tsx (§4)
+├── services/         # httpClient, api/* (§5, §11)
+├── slices/           # authSlice, uiSlice (§6, §7)
+├── store/
+├── test/
+├── types/
+├── ui/               # Design-system barrel (§2)
+└── utils/
 ```
 
 ## Decide upfront
 
-These choices are already made in this codebase. Follow them when adding features to avoid refactoring later.
-
-- **Auth split** — `modules/auth/` holds auth **UI** (pages, schemas, `AuthGate`); `slices/authSlice.ts` holds **session state** (user, tokens, `isAuthenticated`)
-- **Module-based architecture** under `modules/` — enforced by `eslint-plugin-boundaries` (modules must not import from other modules)
-- **Redux boundaries** — session (`auth`) and UI (`ui`) only; no feature slices
-- **Query boundaries** — TanStack Query hooks live in `queries/`, re-exported by `modules/<domain>/hooks.ts`
-- **Layout boundaries** — three route layouts in `layouts/`; shell pieces in `components/layout/`
-- **API conventions** — `services/api/<domain>Api.ts` + paths in `constants/endpoints.ts`
-- **Folder naming** — `modules/` not `features/`; `protectedRoute.tsx` (singular) not `protectedRoutes.tsx`
-- **Page exports** — named exports (`export function UsersListPage`) required for the lazy-loading pattern
-- **Testing** — Vitest (not Jest), with Jest-compatible `describe`/`it`/`expect` API
+- **Auth split** — `modules/auth/` = UI; `slices/authSlice.ts` = session state
+- **Module-based** under `modules/` — no cross-module imports (ESLint boundaries)
+- **Redux** — `auth` + `ui` only; no feature slices
+- **Queries** — live in `queries/`, re-exported from `modules/<domain>/hooks.ts`
+- **Page exports** — named exports for `React.lazy()` pattern
+- **Testing** — Vitest (Jest-compatible API)
 
 ---
 
-# 2. Layouts and Components Layout
+# 2. UI Primitives
 
-### Build the application's skeleton.
+### Install shadcn primitives
 
-## LAYOUTS
+    button
+    input
+    label
+    card
+    skeleton
 
-Located in [`src/layouts/`](src/layouts/):
+Install via shadcn CLI
+```sh
+    npx shadcn@latest add button
+    npx shadcn@latest add input
+    npx shadcn@latest add label
+    npx shadcn@latest add form
+    npx shadcn@latest add card
+    npx shadcn@latest add skeleton
+```
+
+Add more primitives later as features need them (`table`, `dialog`, `sheet`, etc.).
+
+## `ui/` barrel
+
+[`src/ui/index.ts`](src/ui/index.ts) re-exports common primitives:
+
+```ts
+export { Button, buttonVariants } from '@/components/ui/button'
+export { Input } from '@/components/ui/input'
+// … re-export what pages import from @/ui
+```
+
+## PageLoader (Suspense fallback)
+
+```tsx
+// src/components/ui/skeleton.tsx — shadcn skeleton
+import { cn } from '@/lib/utils'
+
+function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div className={cn('animate-pulse rounded-md bg-muted', className)} {...props} />
+  )
+}
+export { Skeleton }
+```
+
+```tsx
+// src/components/PageLoader.tsx
+import { Skeleton } from '@/components/ui/skeleton'
+
+export function PageLoader(): React.JSX.Element {
+  return (
+    <div className="flex min-h-[200px] flex-col gap-3 p-4">
+      <Skeleton className="h-8 w-1/3" />
+      <Skeleton className="h-4 w-1/2" />
+      <Skeleton className="h-10 w-full" />
+    </div>
+  )
+}
+```
+
+**Import convention:** `@/components/ui/*` for shadcn; `@/ui` for the barrel.
+
+---
+
+# 3. Layouts
+
+### Build public and auth shells first. Dashboard shell completes in §8.
+
+## Layout map
 
 | Layout | Routes | Structure |
 |--------|--------|-----------|
 | `PublicLayout` | `/`, `/about`, `/pricing`, `/contact` | `PublicNavbar` → `<Outlet>` |
 | `AuthLayout` | `/auth/login`, `/auth/register`, `/auth/forgot-password` | Header → centered card → footer |
-| `DashboardLayout` | All protected app routes | `AppSidebar` → `AppHeader` → `<Outlet>` → `AppFooter` |
+| `DashboardLayout` | Protected app routes (**§8**) | `AppSidebar` → `AppHeader` → `<Outlet>` → `AppFooter` |
 
-**Behavior:** `PublicLayout` and `AuthLayout` redirect authenticated users to `ROUTES.home` (`/dashboard`).
+`PublicLayout` and `AuthLayout` redirect authenticated users to `ROUTES.home` (`/dashboard`).
 
-### AuthLayout (example)
+### PublicLayout
+
+```tsx
+// src/layouts/PublicLayout.tsx
+import { Outlet, Navigate } from 'react-router-dom'
+import { useAppSelector } from '@/hooks'
+import { selectIsAuthenticated } from '@/slices/authSlice'
+import { ROUTES } from '@/constants/routes'
+import { PublicNavbar } from '@/components/layout/PublicNavbar'
+
+export function PublicLayout(): React.JSX.Element {
+  const isAuthenticated = useAppSelector(selectIsAuthenticated)
+  if (isAuthenticated) return <Navigate to={ROUTES.home} replace />
+  return (
+    <div className="flex h-screen flex-col overflow-hidden bg-background">
+      <PublicNavbar />
+      <main className="flex min-h-0 flex-1 overflow-hidden"><Outlet /></main>
+    </div>
+  )
+}
+```
+
+### AuthLayout
 
 ```tsx
 // src/layouts/AuthLayout.tsx
@@ -153,146 +214,39 @@ export function AuthLayout(): React.JSX.Element {
   return (
     <div className="flex min-h-screen flex-col bg-muted">
       <header className="border-b border-border bg-card px-6 py-4">
-        <div className="mx-auto flex max-w-md items-center gap-2">
-          <Link to={ROUTES.landing} className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-              H
-            </div>
-            <span className="font-semibold">HRIS Enterprise</span>
-          </Link>
-        </div>
+        <Link to={ROUTES.landing} className="flex items-center gap-2 font-semibold">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">H</div>
+          HRIS Enterprise
+        </Link>
       </header>
       <div className="flex flex-1 items-center justify-center p-4">
         <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 shadow-sm">
           <Outlet />
         </div>
       </div>
-      <footer className="border-t border-border px-6 py-3 text-center text-xs text-muted-foreground">
-        &copy; {new Date().getFullYear()} HRIS Enterprise
-      </footer>
     </div>
   )
 }
 ```
 
-### DashboardLayout (example)
-
-```tsx
-// src/layouts/DashboardLayout.tsx — simplified
-<div className="flex min-h-screen">
-  <aside>{/* AppSidebar — collapsible via ui.sidebarOpen */}</aside>
-  <div className="flex min-w-0 flex-1 flex-col">
-    <AppHeader />
-    <main className="flex flex-1 flex-col overflow-auto p-6">
-      <Outlet />
-    </main>
-    <AppFooter />
-  </div>
-</div>
-```
-
-## COMPONENTS LAYOUT
-
-Shell components live in [`src/components/layout/`](src/components/layout/):
-
-```
-components/layout/
-├── AppBreadcrumbs.tsx
-├── AppFooter.tsx
-├── AppHeader.tsx
-├── AppSidebar.tsx
-├── DataTableToolbar.tsx
-├── GlobalSearch.tsx
-├── MessageInbox.tsx
-├── NotificationBell.tsx
-├── PageShell.tsx
-└── PublicNavbar.tsx
-```
-
-**Import convention:** Use `@/components/ui/*` for shadcn primitives, or `@/ui` for the convenience barrel (`Button`, `Modal`, `Select`, etc.).
-
 ---
 
-# 3. Routing FE
+# 4. Routing
 
-`react-router-dom` v7 is already installed. Do not add a separate install step.
+### Wire public and auth routes first. Protected dashboard routes come in §8.
 
 ## File skeleton
 
 ```
 routes/
-├── index.tsx           # createBrowserRouter
-├── lazyRoutes.tsx      # React.lazy() per page
-└── protectedRoute.tsx  # Auth guard (singular filename)
+├── index.tsx
+├── lazyRoutes.tsx
+└── protectedRoute.tsx
 constants/
-└── routes.ts           # ROUTES path constants
-components/
-├── PageLoader.tsx
-└── ui/skeleton.tsx
+└── routes.ts
 ```
 
-### `/components/ui/skeleton.tsx`
-
-Skeleton UI used by `PageLoader` and lazy route fallbacks:
-
-```tsx
-import { cn } from '@/lib/utils'
-
-function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
-  return (
-    <div
-      data-slot="skeleton"
-      className={cn('animate-pulse rounded-md bg-muted', className)}
-      {...props}
-    />
-  )
-}
-
-export { Skeleton }
-```
-
-### `/components/PageLoader.tsx`
-
-```tsx
-import { Skeleton } from '@/components/ui/skeleton'
-
-export function PageLoader(): React.JSX.Element {
-  return (
-    <div className="flex min-h-[200px] flex-col gap-3 p-4">
-      <Skeleton className="h-8 w-1/3" />
-      <Skeleton className="h-4 w-1/2" />
-      <div className="mt-4 space-y-3">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-      </div>
-    </div>
-  )
-}
-```
-
-### `/routes/lazyRoutes.tsx`
-
-Pages use **named exports**. Lazy imports map them to `default`:
-
-```tsx
-import { lazy } from 'react'
-
-export const LandingPage = lazy(() =>
-  import('@/modules/public/pages/LandingPage').then((m) => ({ default: m.LandingPage })),
-)
-export const LoginPage = lazy(() =>
-  import('@/modules/auth/pages/LoginPage').then((m) => ({ default: m.LoginPage })),
-)
-export const UsersListPage = lazy(() =>
-  import('@/modules/users/pages/ListPage').then((m) => ({ default: m.UsersListPage })),
-)
-// … one lazy export per page
-```
-
-### `/constants/routes.ts`
-
-Always use `ROUTES` — never hardcode path strings in components:
+### `constants/routes.ts`
 
 ```ts
 export const ROUTES = {
@@ -304,24 +258,32 @@ export const ROUTES = {
   login: '/auth/login',
   register: '/auth/register',
   forgotPassword: '/auth/forgot-password',
-  resetPassword: '/auth/reset-password',
   users: '/users',
   employees: '/employees',
-  // … all dashboard paths
+  // … add dashboard paths as you build modules
 } as const
 ```
 
-### `/routes/index.tsx`
+### `lazyRoutes.tsx` — named export pattern
 
-Three layout groups with `Suspense` + `PageLoader`:
+```tsx
+import { lazy } from 'react'
+
+export const LandingPage = lazy(() =>
+  import('@/modules/public/pages/LandingPage').then((m) => ({ default: m.LandingPage })),
+)
+export const LoginPage = lazy(() =>
+  import('@/modules/auth/pages/LoginPage').then((m) => ({ default: m.LoginPage })),
+)
+```
+
+### `index.tsx` — Public + Auth only (phase 1)
 
 ```tsx
 import { Suspense, type ReactNode } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AuthLayout } from '@/layouts/AuthLayout'
-import { DashboardLayout } from '@/layouts/DashboardLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
-import { ProtectedRoute } from '@/routes/protectedRoute'
 import { PageLoader } from '@/components/PageLoader'
 import { ROUTES } from '@/constants/routes'
 import * as Lazy from './lazyRoutes'
@@ -335,8 +297,6 @@ export const router = createBrowserRouter([
     element: <PublicLayout />,
     children: [
       { index: true, element: <SuspenseWrap><Lazy.LandingPage /></SuspenseWrap> },
-      { path: 'about', element: <SuspenseWrap><Lazy.AboutPage /></SuspenseWrap> },
-      // …
     ],
   },
   {
@@ -348,122 +308,150 @@ export const router = createBrowserRouter([
       { path: 'forgot-password', element: <SuspenseWrap><Lazy.ForgotPasswordPage /></SuspenseWrap> },
     ],
   },
-  {
-    element: <ProtectedRoute />,
-    children: [
-      {
-        element: <DashboardLayout />,
-        children: [
-          { path: 'dashboard', element: <SuspenseWrap><Lazy.DashboardPage /></SuspenseWrap> },
-          { path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
-          // … all protected routes
-        ],
-      },
-    ],
-  },
   { path: '/login', element: <Navigate to={ROUTES.login} replace /> },
   { path: '*', element: <Navigate to={ROUTES.landing} replace /> },
 ])
 ```
 
-### `/routes/protectedRoute.tsx`
+### `protectedRoute.tsx` (stub — used in §8)
 
 ```tsx
-export function ProtectedRoute({ permissions }: ProtectedRouteProps): React.JSX.Element {
-  const isAuthenticated = useAppSelector(selectIsAuthenticated)
-  const { can } = usePermission()
+// src/routes/protectedRoute.tsx
+import { Navigate, Outlet } from 'react-router-dom'
+import { useAppSelector } from '@/hooks'
+import { selectIsAuthenticated } from '@/slices/authSlice'
+import { ROUTES } from '@/constants/routes'
 
+export function ProtectedRoute(): React.JSX.Element {
+  const isAuthenticated = useAppSelector(selectIsAuthenticated)
   if (!isAuthenticated) return <Navigate to={ROUTES.login} replace />
-  if (permissions?.length && !permissions.some((p) => can(p))) {
-    return <Navigate to={ROUTES.home} replace />
-  }
   return <Outlet />
 }
 ```
 
-## Checklist: Add a new route
+## Checklist: Add a route later
 
-1. Add path to [`src/constants/routes.ts`](src/constants/routes.ts) as `ROUTES.<name>`
-2. Create page in `src/modules/<domain>/pages/` with a **named export**
-3. Add lazy export in [`src/routes/lazyRoutes.tsx`](src/routes/lazyRoutes.tsx)
-4. Register route in [`src/routes/index.tsx`](src/routes/index.tsx) under the correct layout:
-   - Public → `PublicLayout` children
-   - Auth → `AuthLayout` children (`/auth/...`)
-   - App → `ProtectedRoute` → `DashboardLayout` children
-5. Add sidebar entry in [`src/constants/navigation.ts`](src/constants/navigation.ts) (dashboard) or [`src/constants/publicNavigation.ts`](src/constants/publicNavigation.ts) (public)
-6. Add metadata in [`src/constants/routeMeta.ts`](src/constants/routeMeta.ts) for page title and breadcrumbs
-7. (Optional) Add to [`src/test/features.ts`](src/test/features.ts) and [`cypress/e2e/features.cy.ts`](cypress/e2e/features.cy.ts)
-
-> **Gap:** `ROUTES.resetPassword` exists in constants, but there is no `ResetPasswordPage` or router entry yet.
+1. `ROUTES.<name>` in `constants/routes.ts`
+2. Named export page in `modules/<domain>/pages/`
+3. Lazy export in `lazyRoutes.tsx`
+4. Register under correct layout in `index.tsx`
 
 ---
 
-# 4. Authentication Foundation
+# 5. API Layer (auth minimum)
 
-## Auth file map
-
-| Concern | File |
-|---------|------|
-| Login UI | [`src/modules/auth/pages/LoginPage.tsx`](src/modules/auth/pages/LoginPage.tsx) |
-| Register / forgot UI | [`src/modules/auth/pages/RegisterPage.tsx`](src/modules/auth/pages/RegisterPage.tsx), [`ForgotPasswordPage.tsx`](src/modules/auth/pages/ForgotPasswordPage.tsx) |
-| Validation schemas | [`src/modules/auth/schemas.ts`](src/modules/auth/schemas.ts) |
-| Session restore gate | [`src/modules/auth/AuthGate.tsx`](src/modules/auth/AuthGate.tsx) |
-| Session state | [`src/slices/authSlice.ts`](src/slices/authSlice.ts) |
-| Auth API | [`src/services/api/authApi.ts`](src/services/api/authApi.ts) |
-| Token storage + interceptors | [`src/services/httpClient.ts`](src/services/httpClient.ts) |
-| Bootstrap wiring | [`src/bootstrap/auth.ts`](src/bootstrap/auth.ts) (called from `main.tsx`) |
-| Auth route layout | [`src/layouts/AuthLayout.tsx`](src/layouts/AuthLayout.tsx) |
-| App route guard | [`src/routes/protectedRoute.tsx`](src/routes/protectedRoute.tsx) |
-| Permission hook | [`src/hooks/usePermission.ts`](src/hooks/usePermission.ts) |
-| Optional UI guard | [`src/components/RequirePermission.tsx`](src/components/RequirePermission.tsx) (exists; not wired in pages yet) |
-
-## Auth routes
-
-URLs from [`src/constants/routes.ts`](src/constants/routes.ts). Pages are lazy-loaded via [`src/routes/lazyRoutes.tsx`](src/routes/lazyRoutes.tsx) and registered in [`src/routes/index.tsx`](src/routes/index.tsx) under `AuthLayout` (see **Section 3**).
-
-| Route | Page | Layout |
-|-------|------|--------|
-| `/auth/login` (`ROUTES.login`) | `LoginPage` | `AuthLayout` |
-| `/auth/register` (`ROUTES.register`) | `RegisterPage` | `AuthLayout` |
-| `/auth/forgot-password` (`ROUTES.forgotPassword`) | `ForgotPasswordPage` | `AuthLayout` |
-| `/login` | redirect → `/auth/login` | — |
-| `/dashboard` (`ROUTES.home`) | post-login destination | `DashboardLayout` |
-
-Lazy-loading pattern for auth pages:
-
-```tsx
-// src/routes/lazyRoutes.tsx
-export const LoginPage = lazy(() =>
-  import('@/modules/auth/pages/LoginPage').then((m) => ({ default: m.LoginPage })),
-)
-
-// src/routes/index.tsx
-{ path: 'login', element: <SuspenseWrap><Lazy.LoginPage /></SuspenseWrap> },
-```
+### HTTP client and auth API before LoginPage can call the backend.
 
 ## Token storage
-
-`sessionStorage` keys (via `httpClient.ts`):
 
 | Key | Purpose |
 |-----|---------|
 | `hris_access_token` | JWT access token |
 | `hris_refresh_token` | Refresh token |
-| `hris_tenant_id` | Multi-tenant header value |
+| `hris_tenant_id` | Multi-tenant header |
 
-In-memory mirrors exist for `accessToken` and `tenantId` for fast interceptor access.
+## `httpClient.ts`
 
-## Flows
+```ts
+// src/services/httpClient.ts — essentials
+export const httpClient = axios.create({
+  baseURL: `${import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'}/api/v1`,
+})
 
-**Login:**
+httpClient.interceptors.request.use((config) => {
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
+  if (tenantId) config.headers['X-Tenant-Id'] = tenantId
+  return config
+})
 
+export function setAuthHandlers(handlers: { refresh: () => Promise<string | null>; unauthorized: () => void }): void
+export function setAccessToken(token: string | null): void
+export function getAccessToken(): string | null
+export function clearAuthStorage(): void
 ```
-User → /auth/login (AuthLayout)
-  → LoginPage dispatches login thunk
-  → authApi.login → BE returns user + tokens + permissions
-  → authSlice stores user, tokens, tenantId
-  → navigate(ROUTES.home) → /dashboard
+
+401 interceptor queues requests and calls `onRefresh` once (wired in §6).
+
+## `authApi.ts`
+
+```ts
+// src/services/api/authApi.ts
+import { httpClient, getRefreshToken } from '@/services/httpClient'
+import { endpoints } from '@/constants/endpoints'
+
+export async function login(payload: LoginPayload): Promise<LoginResult> {
+  const res = await httpClient.post<ApiResponse<LoginResult>>(endpoints.auth.login, payload)
+  return res.data.data
+}
+
+export async function logout(): Promise<void> {
+  const refreshToken = getRefreshToken()
+  await httpClient.post(endpoints.auth.logout, refreshToken ? { refreshToken } : undefined)
+}
+
+export async function fetchMe(): Promise<User> {
+  const res = await httpClient.get<ApiResponse<User>>(endpoints.auth.me)
+  return res.data.data
+}
 ```
+
+## `errors.ts`
+
+[`src/services/errors.ts`](src/services/errors.ts) — `normalizeApiError()` for auth slice and query toasts.
+
+> **Defer to §11:** `createResourceApi`, per-domain APIs, full `endpoints.ts` beyond auth paths.
+
+---
+
+# 6. Authentication Foundation
+
+### Session state, bootstrap, LoginPage, and app shell. Requires §2 (UI), §4 (routes), §5 (API).
+
+## Auth file map
+
+| Concern | File |
+|---------|------|
+| Login UI | `src/modules/auth/pages/LoginPage.tsx` |
+| Register / forgot | `src/modules/auth/pages/RegisterPage.tsx`, `ForgotPasswordPage.tsx` |
+| Schemas | `src/modules/auth/schemas.ts` |
+| Session gate | `src/modules/auth/AuthGate.tsx` |
+| Session state | `src/slices/authSlice.ts` |
+| Bootstrap | `src/bootstrap/auth.ts` |
+| Route guard | `src/routes/protectedRoute.tsx` |
+
+## Store shell
+
+```ts
+// src/store/rootReducer.ts
+import { combineReducers } from '@reduxjs/toolkit'
+import { authReducer } from '@/slices/authSlice'
+
+export const rootReducer = combineReducers({ auth: authReducer })
+```
+
+```ts
+// src/store/index.ts
+export const store = configureStore({ reducer: rootReducer })
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
+export type AppStore = typeof store
+```
+
+## `authSlice.ts` — login thunk
+
+```ts
+export const login = createAsyncThunk('auth/login', async (payload, { rejectWithValue }) => {
+  try {
+    return await authApi.login(payload)
+  } catch (e) {
+    return rejectWithValue(normalizeApiError(e).message)
+  }
+})
+
+// login.fulfilled: set user, tokens, tenantId, isAuthenticated = true
+```
+
+## LoginPage
 
 ```tsx
 // src/modules/auth/pages/LoginPage.tsx
@@ -472,34 +460,21 @@ void dispatch(login(data)).then((result) => {
 })
 ```
 
-**Logout:** `AppHeader` → Redux `logout` thunk → best-effort `authApi.logout` (sends refresh token) → always `clearAuthStorage` in `finally` → redirect to `ROUTES.login` (`/auth/login`) on `logout.fulfilled`.
+Uses RHF + zod (`loginSchema`) and shadcn `Form`, `Button`, `Input`, `Card` from §2.
 
-**Bootstrap:** `main.tsx` calls `bootstrapAuth(store)` before render. That wires `setAuthHandlers` and, if a token exists, dispatches `fetchMe` to restore `user` (including `permissions`) into Redux.
+## Auth routes
 
-**AuthGate:** While a token exists but `user === null` (session restoring), shows a full-page `PageLoader` until `fetchMe` completes or fails.
+| Route | Page | Layout |
+|-------|------|--------|
+| `/auth/login` | `LoginPage` | `AuthLayout` |
+| `/auth/register` | `RegisterPage` | `AuthLayout` |
+| `/auth/forgot-password` | `ForgotPasswordPage` | `AuthLayout` |
+| `/dashboard` (`ROUTES.home`) | post-login destination | `DashboardLayout` (§8) |
 
-**401 refresh:** Axios response interceptor queues failed requests, calls `refreshSession` thunk once, retries with new token. On refresh failure, clears auth storage.
-
-**Request headers:** Every request gets `Authorization: Bearer <token>` and `X-Tenant-Id: <tenantId>` when available.
-
-## Layout guards
-
-| Layout / guard | Behavior |
-|----------------|----------|
-| `PublicLayout` | Authenticated → redirect `/dashboard` |
-| `AuthLayout` | Authenticated → redirect `/dashboard`; logo links to `/` (`ROUTES.landing`) |
-| `ProtectedRoute` | Unauthenticated → redirect `/auth/login` |
-
-## Wiring auth handlers
-
-Auth handlers are wired in [`src/bootstrap/auth.ts`](src/bootstrap/auth.ts), **not** in `App.tsx`:
+## Bootstrap + app entry
 
 ```ts
 // src/bootstrap/auth.ts
-import { fetchMe, refreshSession } from '@/slices/authSlice'
-import { setAuthHandlers, getAccessToken } from '@/services/httpClient'
-import type { AppStore } from '@/store'
-
 export function bootstrapAuth(store: AppStore): void {
   setAuthHandlers({
     refresh: async () => {
@@ -507,565 +482,318 @@ export function bootstrapAuth(store: AppStore): void {
       if (refreshSession.fulfilled.match(result)) return result.payload
       return null
     },
-    unauthorized: () => {
-      void store.dispatch(refreshSession())
-    },
+    unauthorized: () => { void store.dispatch(refreshSession()) },
   })
   if (getAccessToken()) void store.dispatch(fetchMe())
 }
 ```
 
-Called from `main.tsx` before `createRoot(...).render(...)`.
-
-## Permissions
-
-- `user.permissions` (string array) comes from the backend on **login** and **`GET /auth/me`** — resolved from the user's roles in the database.
-- `GET /permissions` is a separate **admin catalog** endpoint (Permissions list page), not used to determine the current user's access.
-- FE checks today: sidebar and global search filter via `usePermission()` + `constants/navigation.ts`.
-- BE enforces permissions on API endpoints via `PermissionsGuard`.
-- `ProtectedRoute` accepts an optional `permissions` prop, and `RequirePermission` can hide UI — **neither is wired to routes or CRUD actions yet**.
-
-To enforce permissions on a route when needed:
+```tsx
+// src/main.tsx
+bootstrapAuth(store)
+createRoot(root).render(
+  <StrictMode>
+    <AppProviders store={store}><App /></AppProviders>
+  </StrictMode>,
+)
+```
 
 ```tsx
-{
-  element: <ProtectedRoute permissions={[PERMISSIONS.usersRead]} />,
-  children: [/* users routes */],
+// src/app/AppProviders.tsx — wrap with Provider, QueryProvider, ThemeProvider, AuthGate
+// src/app/App.tsx
+export function App() {
+  return <RouterProvider router={router} />
 }
 ```
 
-Sidebar nav already filters by permission via `constants/navigation.ts`; route-level and action-level enforcement are additional layers you can wire when needed.
+## AuthGate
 
----
+Shows full-page `PageLoader` while token exists but `user === null` (session restoring via `fetchMe`).
 
-# 5. Reusable UI Components
+## Layout guards
 
-Two layers — do not confuse them:
+| Layout / guard | Behavior |
+|----------------|----------|
+| `PublicLayout` | Authenticated → `/dashboard` |
+| `AuthLayout` | Authenticated → `/dashboard` |
+| `ProtectedRoute` | Unauthenticated → `/auth/login` |
 
-### `components/ui/` — shadcn/Radix primitives
+## Permissions
 
-27 files configured via [`components.json`](components.json) (`radix-nova` style):
+- `user.permissions` from login / `GET /auth/me` (role-based on BE)
+- `usePermission()` reads Redux `user.permissions`; admin role bypasses checks
+- Sidebar filters via `constants/navigation.ts` — route/action gating optional
 
-`alert`, `alert-dialog`, `avatar`, `badge`, `breadcrumb`, `button`, `card`, `checkbox`, `collapsible`, `command`, `dialog`, `dropdown-menu`, `form`, `input`, `input-group`, `label`, `popover`, `scroll-area`, `select`, `separator`, `sheet`, `skeleton`, `table`, `tabs`, `textarea`, `tooltip`
+## Logout
 
-Add new shadcn components with the shadcn CLI (aliases point to `@/components/ui`).
-
-### `ui/` — convenience barrel
-
-[`src/ui/index.ts`](src/ui/index.ts) re-exports common primitives plus thin wrappers: `Modal`, `Select`, `Dropdown`, `Tooltip`, `Tabs`.
-
-### Shared app components
-
-| Component | Purpose |
-|-----------|---------|
-| `EntityListPage` | Generic searchable table with active/trashed tabs |
-| `EntityFormDialog` | Create/edit dialog (name + status) |
-| `ConfirmDialog` | Soft delete, hard delete, restore confirmations |
-| `PageHeader` | Standalone page title + description |
-| `PageShell` | Dashboard page wrapper (title, description, toolbar, breadcrumbs) |
-| `PageLoader` | Suspense fallback |
-| `EmptyState` | Empty list placeholder |
-| `ErrorBoundary` | Catches render errors |
-| `StatusBadge` | Status pill display |
-| `MetricsDashboard` | Dashboard metrics cards |
-| `OrgChartTree` | Organization chart visualization |
-| `EmployeeActionDialog` | Promote/transfer employee flows |
-
-**Principle:** Radix UI = behavior engine; Tailwind classes = styling; this project's components and conventions = final authority.
-
----
-
-# 6. Vitest + React Testing Library
-
-> **Important:** This repo uses **Vitest**, not Jest. The API is Jest-compatible (`describe`, `it`, `expect`), but config and scripts say Vitest.
-
-### What this covers
-
-- Unit testing (slices, hooks, utilities)
-- Component testing (layout, design system)
-- Redux logic testing (`uiSlice`, auth schemas)
-- Integration testing against a live API (separate config)
-
-### Setup structure
-
-```
-src/test/
-├── setup.ts              # @testing-library/jest-dom, matchMedia mock
-├── utils.tsx             # renderWithProviders
-├── fixtures.ts           # mockAdminUser
-├── features.ts           # integration coverage manifest
-├── unit/
-│   ├── components/layout/
-│   └── slices/
-└── integration/          # live API tests (vitest.integration.config.ts)
-```
-
-Co-located tests also exist: `src/**/*.test.{ts,tsx}` (e.g. `LoginPage.test.tsx`, `factory.test.ts`).
-
-### Config
-
-[`vitest.config.ts`](vitest.config.ts):
-
-- Environment: `jsdom`
-- Globals: `true`
-- Setup: `src/test/setup.ts`
-- Include: `src/**/*.test.{ts,tsx}`
-- Exclude: `src/test/integration/**`
-- Alias: `@` → `./src`
-
-### `renderWithProviders`
-
-[`src/test/utils.tsx`](src/test/utils.tsx) wraps components with Redux store, QueryClient, MemoryRouter, ThemeProvider, and TooltipProvider. Use this instead of bare `render()`.
-
-### Scripts
-
-| Command | Purpose |
-|---------|---------|
-| `npm run test` | Unit tests |
-| `npm run test:watch` | Watch mode |
-| `npm run test:coverage` | Coverage report |
-| `npm run test:integration` | Live API tests (starts BE + Postgres) |
-| `npm run test:all` | Unit + integration + E2E |
-
-### What to test first
-
-- `uiSlice` reducer actions
-- Layout components (`PublicNavbar`, `PageShell`)
-- Auth schemas and `LoginPage`
-- `queries/factory.ts` mutation invalidation
-- `services/errors.ts` normalization
-- shadcn primitives via `ui/Button.test.tsx`
-
-**Core idea:** Tests validate logic and UI behavior in isolation via `renderWithProviders` — not full app flows (those belong in integration/E2E tests).
+`AppHeader` → `logout` thunk → best-effort API → always clear storage → redirect to `ROUTES.login`.
 
 ---
 
 # 7. Global UI State
 
-Redux slices for **UI only** — no feature data in Redux.
+### Add `uiSlice` before dashboard chrome (sidebar toggle, theme, command palette).
 
 [`src/slices/uiSlice.ts`](src/slices/uiSlice.ts):
 
 | State | Actions |
 |-------|---------|
 | `sidebarOpen` | `toggleSidebar`, `setSidebarOpen` |
-| `theme` | `setTheme` (`light` \| `dark` \| `system`) |
-| `globalLoading` | `setGlobalLoading` |
-| `expandedNavGroups` | `toggleNavGroup`, `setExpandedNavGroups` |
-| `notificationsOpen` | `setNotificationsOpen` |
+| `theme` | `setTheme` |
 | `commandPaletteOpen` | `setCommandPaletteOpen` |
+| `expandedNavGroups` | `toggleNavGroup` |
 | `sidebarSearchQuery` | `setSidebarSearchQuery` |
 
-Theme is applied via [`src/hooks/useTheme.ts`](src/hooks/useTheme.ts) and [`src/components/ThemeProvider.tsx`](src/components/ThemeProvider.tsx).
-
-**Store composition** ([`src/store/rootReducer.ts`](src/store/rootReducer.ts)):
-
 ```ts
+// src/store/rootReducer.ts — add ui
 export const rootReducer = combineReducers({
   auth: authReducer,
   ui: uiReducer,
 })
 ```
 
-Server/business state lives in TanStack Query — do not add feature slices to Redux.
+Theme: [`src/hooks/useTheme.ts`](src/hooks/useTheme.ts) + [`src/components/ThemeProvider.tsx`](src/components/ThemeProvider.tsx).
 
 ---
 
-# 8. API Layer
+# 8. Dashboard Shell and Protected Routes
 
-### HTTP client
+### Layout chrome + protected router branch. Requires §7 (`uiSlice`).
 
-[`src/services/httpClient.ts`](src/services/httpClient.ts):
+## `components/layout/`
 
-- Base URL: `${VITE_API_BASE_URL}/api/v1` (version from [`src/constants/api.ts`](src/constants/api.ts))
-- Request interceptor: Bearer token + `X-Tenant-Id`
-- Response interceptor: 401 queue-based token refresh
+```
+components/layout/
+├── AppSidebar.tsx      # Nav groups, permission filter
+├── AppHeader.tsx       # User menu, logout, breadcrumbs
+├── AppFooter.tsx
+├── PublicNavbar.tsx
+├── PageShell.tsx
+├── AppBreadcrumbs.tsx
+└── …
+```
 
-### API helpers
+## DashboardLayout
+
+```tsx
+// src/layouts/DashboardLayout.tsx — simplified
+<div className="flex min-h-screen">
+  <aside>{/* AppSidebar — ui.sidebarOpen */}</aside>
+  <div className="flex min-w-0 flex-1 flex-col">
+    <AppHeader />
+    <main className="flex flex-1 flex-col overflow-auto p-6"><Outlet /></main>
+    <AppFooter />
+  </div>
+</div>
+```
+
+## Complete protected routes in `index.tsx`
+
+```tsx
+{
+  element: <ProtectedRoute />,
+  children: [{
+    element: <DashboardLayout />,
+    children: [
+      { path: 'dashboard', element: <SuspenseWrap><Lazy.DashboardPage /></SuspenseWrap> },
+      { path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
+      // …
+    ],
+  }],
+},
+```
+
+## Navigation metadata
+
+- [`src/constants/navigation.ts`](src/constants/navigation.ts) — sidebar groups + optional `permission` per item
+- [`src/constants/routeMeta.ts`](src/constants/routeMeta.ts) — page titles and breadcrumbs
+
+---
+
+# 9. Shared App Components
+
+### CRUD and page scaffolding — after auth and dashboard shell.
+
+| Component | Purpose |
+|-----------|---------|
+| `EntityListPage` | Generic searchable table (active/trashed tabs) |
+| `EntityFormDialog` | Create/edit dialog (name + status) |
+| `ConfirmDialog` | Soft delete, restore, hard delete |
+| `PageShell` | Dashboard page wrapper (title, toolbar, breadcrumbs) |
+| `PageLoader` | Suspense fallback (§2) |
+| `EmptyState` | Empty list placeholder |
+| `MetricsDashboard` | Dashboard metrics cards |
+| `EmployeeActionDialog` | Promote/transfer flows |
+
+**Principle:** shadcn = behavior; Tailwind = styling; these components = app conventions.
+
+---
+
+# 10. Vitest + React Testing Library
+
+> **Vitest**, not Jest. API is Jest-compatible.
+
+```
+src/test/
+├── setup.ts
+├── utils.tsx             # renderWithProviders
+├── fixtures.ts
+├── unit/
+└── integration/
+```
+
+[`vitest.config.ts`](vitest.config.ts): `jsdom`, globals, `src/test/setup.ts`, alias `@`.
+
+| Command | Purpose |
+|---------|---------|
+| `npm run test` | Unit tests |
+| `npm run test:integration` | Live API (needs BE) |
+| `npm run test:all` | Unit + integration + E2E |
+
+**Test first:** `uiSlice`, `PublicNavbar`, auth schemas, `LoginPage`, `queries/factory.ts`.
+
+Use [`renderWithProviders`](src/test/utils.tsx) — Redux + Query + Router + Theme.
+
+---
+
+# 11. API Resources + TanStack Query
+
+### Per-domain APIs and query hooks for feature modules.
+
+## API helpers
 
 [`src/services/api/client.ts`](src/services/api/client.ts):
 
 | Helper | Purpose |
 |--------|---------|
-| `apiGet`, `apiPost`, `apiPut`, `apiPatch`, `apiDelete` | Unwrap `ApiResponse<T>.data` |
+| `apiGet`, `apiPost`, … | Unwrap `ApiResponse<T>.data` |
 | `createResourceApi` | Read-only list + getById |
-| `createMutableResourceApi` | Full CRUD + soft delete, restore, trashed list, deactivate |
-
-### Per-domain APIs
-
-```
-services/api/
-├── client.ts
-├── authApi.ts          # Custom auth endpoints
-├── usersApi.ts         # createMutableResourceApi
-├── employeesApi.ts     # + promote/transfer
-├── leaveApi.ts         # + approve/reject/pending
-├── permissionsApi.ts   # Read-only catalog
-├── analyticsApi.ts     # Dashboard metrics
-└── … (29 modules total)
-```
-
-Paths are centralized in [`src/constants/endpoints.ts`](src/constants/endpoints.ts).
-
-### Example: users API
+| `createMutableResourceApi` | CRUD + soft delete, restore, trashed |
 
 ```ts
 // src/services/api/usersApi.ts
-import { endpoints } from '@/constants/endpoints'
-import { createMutableResourceApi } from './client'
-import type { UsersEntity } from '@/modules/users/types'
-
 export const usersApi = createMutableResourceApi<UsersEntity>({
   list: endpoints.users.list,
   byId: endpoints.users.byId,
   trashed: endpoints.users.trashed,
   softDelete: endpoints.users.softDelete,
   restore: endpoints.users.restore,
-  deactivate: endpoints.users.deactivate,
-  reactivate: endpoints.users.reactivate,
 })
 ```
 
-### Error normalization
-
-[`src/services/errors.ts`](src/services/errors.ts) — `normalizeApiError()` used by auth slice and query client global error handler.
-
----
-
-# 9. TanStack Query Setup
-
-### Create conventions
+## TanStack Query
 
 | File | Role |
 |------|------|
-| [`src/lib/queryClient.ts`](src/lib/queryClient.ts) | Singleton client; global toast on errors |
-| [`src/lib/queryKeys.ts`](src/lib/queryKeys.ts) | Hierarchical keys per resource |
-| [`src/queries/factory.ts`](src/queries/factory.ts) | `createResourceQueryHooks()` factory |
-| [`src/queries/<domain>/queries.ts`](src/queries/users/queries.ts) | Wires factory to API + keys |
-| [`src/queries/index.ts`](src/queries/index.ts) | Barrel re-exports all hooks |
-
-### Query client defaults
-
-```ts
-// src/lib/queryClient.ts
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { staleTime: 60_000, gcTime: 5 * 60_000, retry: 1, refetchOnWindowFocus: false },
-    mutations: { retry: 0 },
-  },
-  queryCache: new QueryCache({ onError: handleError }),
-  mutationCache: new MutationCache({ onError: handleError }),
-})
-```
-
-### Query keys pattern
-
-```ts
-// src/lib/queryKeys.ts
-export const queryKeys = {
-  users: {
-    all: ['users'] as const,
-    list: () => [...queryKeys.users.all, 'list'] as const,
-    trashed: () => [...queryKeys.users.all, 'trashed'] as const,
-  },
-  // … one entry per resource
-}
-```
-
-### Factory hooks
-
-`createResourceQueryHooks(queryKeys.users, usersApi)` returns:
-
-- `useList`, `useTrashedList`
-- `useCreate`, `useUpdate`
-- `useSoftDelete`, `useRestore`, `useRemove`
-
-Mutations invalidate the resource's `all` key and show Sonner toasts on success.
-
-### Wiring example
+| `lib/queryClient.ts` | Singleton + global error toasts |
+| `lib/queryKeys.ts` | Hierarchical keys per resource |
+| `queries/factory.ts` | `createResourceQueryHooks()` |
+| `queries/<domain>/queries.ts` | Wire factory to API |
+| `modules/<domain>/hooks.ts` | Re-export query hooks |
 
 ```ts
 // src/queries/users/queries.ts
-import { queryKeys } from '@/lib/queryKeys'
-import { usersApi } from '@/services/api/usersApi'
-import { createResourceQueryHooks } from '../factory'
-
 const hooks = createResourceQueryHooks(queryKeys.users, usersApi)
-
 export const useUsersList = hooks.useList
-export const useUsersTrashedList = hooks.useTrashedList
-export const useCreateUser = hooks.useCreate
-export const useUpdateUser = hooks.useUpdate
-export const useSoftDeleteUser = hooks.useSoftDelete
-export const useRestoreUser = hooks.useRestore
-export const useRemoveUser = hooks.useRemove
 ```
-
-```ts
-// src/modules/users/hooks.ts
-export {
-  useUsersList,
-  useUsersTrashedList,
-  useCreateUser,
-  useUpdateUser,
-  useSoftDeleteUser,
-  useRestoreUser,
-  useRemoveUser,
-} from '@/queries'
-```
-
-### Data flow
 
 ```mermaid
 flowchart LR
-  ApiModule["services/api/usersApi.ts"] --> QueryHooks["queries/users/queries.ts"]
-  QueryKeys["lib/queryKeys.ts"] --> QueryHooks
-  Factory["queries/factory.ts"] --> QueryHooks
-  QueryHooks --> ModuleHooks["modules/users/hooks.ts"]
-  ModuleHooks --> ListPage["modules/users/pages/ListPage.tsx"]
-  ListPage --> EntityCrud["hooks/useEntityCrudPage.ts"]
-  EntityCrud --> EntityListPage["components/EntityListPage.tsx"]
+  ApiModule[services/api/usersApi.ts] --> QueryHooks[queries/users/queries.ts]
+  QueryHooks --> ModuleHooks[modules/users/hooks.ts]
+  ModuleHooks --> ListPage[modules/users/pages/ListPage.tsx]
+  ListPage --> EntityListPage[components/EntityListPage.tsx]
 ```
 
 ---
 
-# 10. Feature Module Structure
+# 12. Feature Modules, E2E, Forms
 
-### Standard module (most HR domains)
+### Standard module shape
 
 ```
 modules/<domain>/
 ├── pages/ListPage.tsx    # Named export: <Domain>ListPage
 ├── hooks.ts              # Re-exports from @/queries
-└── types.ts              # Domain entity types
+└── types.ts
 ```
 
-### Auth module (non-CRUD)
-
-Unlike HR domain modules, auth lives under `modules/auth/` with no list page or `hooks.ts` re-exports:
+### Auth module (exception)
 
 ```
 modules/auth/
-├── AuthGate.tsx              # Session restore loader (wraps app in AppProviders)
-├── pages/
-│   ├── LoginPage.tsx         # Redux login thunk → /dashboard
-│   ├── RegisterPage.tsx      # Direct authApi.register → redirect to login
-│   └── ForgotPasswordPage.tsx
-└── schemas.ts                # zod schemas for login, register, forgot-password
+├── AuthGate.tsx
+├── pages/LoginPage.tsx, RegisterPage.tsx, ForgotPasswordPage.tsx
+└── schemas.ts
 ```
 
-Session state remains in `slices/authSlice.ts`; pages dispatch thunks or call `authApi` directly (register/forgot do not auto-login).
+### Generic CRUD page
 
-### Generic CRUD page pattern
+Use `useEntityCrudPage` + `EntityListPage` + `EntityFormDialog` + `ConfirmDialog` (see [`modules/users/pages/ListPage.tsx`](src/modules/users/pages/ListPage.tsx)).
 
-Most list pages follow this pattern ([`modules/users/pages/ListPage.tsx`](src/modules/users/pages/ListPage.tsx)):
+## Checklist: New HR module
 
-```tsx
-import { EntityListPage } from '@/components/EntityListPage'
-import { EntityFormDialog } from '@/components/EntityFormDialog'
-import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { useEntityCrudPage } from '@/hooks/useEntityCrudPage'
-import { useUsersList, useUsersTrashedList, useCreateUser, /* … */ } from '../hooks'
+1. `modules/<domain>/types.ts`
+2. Endpoints in `constants/endpoints.ts`
+3. `services/api/<domain>Api.ts`
+4. `lib/queryKeys.ts` entry
+5. `queries/<domain>/queries.ts` + barrel
+6. `modules/<domain>/hooks.ts` + `pages/ListPage.tsx`
+7. Route checklist (§4)
+8. Sidebar in `navigation.ts` + `routeMeta.ts`
 
-export function UsersListPage(): React.JSX.Element {
-  const crud = useEntityCrudPage({
-    title: 'Users',
-    description: 'Manage users records',
-    emptyTitle: 'No users found',
-    entitySingular: 'user',
-    hooks: {
-      useList: useUsersList,
-      useTrashedList: useUsersTrashedList,
-      useCreate: useCreateUser,
-      useUpdate: useUpdateUser,
-      useSoftDelete: useSoftDeleteUser,
-      useRestore: useRestoreUser,
-      useRemove: useRemoveUser,
-    },
-  })
-
-  return (
-    <>
-      <EntityListPage {...crud.listPageProps} />
-      <EntityFormDialog {...crud.formDialogProps} />
-      <ConfirmDialog {...crud.confirmDialogProps} />
-    </>
-  )
-}
-```
-
-`useEntityCrudPage` orchestrates list state, form dialog open/close, and confirm dialog actions. `EntityFormDialog` only supports `name` + `status` fields.
-
-## Checklist: Add a new HR module
-
-Use this when scaffolding a new domain (e.g. `expenses`):
-
-1. **Types** — Create `src/modules/expenses/types.ts` with entity interface (`id`, `name`, `status`, …)
-2. **Endpoints** — Add paths to [`src/constants/endpoints.ts`](src/constants/endpoints.ts)
-3. **API** — Create `src/services/api/expensesApi.ts` using `createMutableResourceApi` (or `createResourceApi` for read-only)
-4. **Query keys** — Add `expenses` entry to [`src/lib/queryKeys.ts`](src/lib/queryKeys.ts)
-5. **Query hooks** — Create `src/queries/expenses/queries.ts` via `createResourceQueryHooks`
-6. **Barrel** — Re-export hooks from [`src/queries/index.ts`](src/queries/index.ts)
-7. **Module** — Create `src/modules/expenses/`:
-   - `hooks.ts` — re-export query hooks
-   - `pages/ListPage.tsx` — `ExpensesListPage` using `useEntityCrudPage`
-   - `types.ts` — entity types
-8. **Routing** — Follow the [Add a new route](#checklist-add-a-new-route) checklist above
-9. **Testing** — Add entry to [`src/test/features.ts`](src/test/features.ts) and [`cypress/e2e/features.cy.ts`](cypress/e2e/features.cy.ts) if coverage is required
-10. **ESLint** — Do not import from other `modules/*`; only use shared layers (`@/components`, `@/hooks`, `@/queries`, etc.)
-
-### Modules with custom UI (not generic CRUD)
-
-| Module | Difference |
-|--------|------------|
-| `auth` | `AuthGate`, login/register/forgot pages, RHF + zod schemas; no list page |
-| `public` | Marketing pages (Landing, About, Pricing, Contact) |
-| `dashboard` | Metrics via analytics query |
-| `leave` | Pending tab + approve/reject actions |
-| `employees` | Promote/transfer via `EmployeeActionDialog` |
-| `organization` | Org chart tree visualization |
-| `reports` | Report generation cards |
-| `permissions` | Read-only permission catalog |
-| `audit`, `system` | Read-only lists |
-
-When a module needs custom UI, keep API + query hooks in the shared layers and build custom components in the module's `pages/` folder.
-
----
-
-# 11. E2E Testing (Cypress)
-
-Start after real user flows exist in the application.
-
-### What this covers
-
-- Full login flow
-- Protected route navigation
-- Feature page smoke tests
-- Sidebar navigation
-
-### Structure
-
-```
-cypress/
-├── e2e/
-│   ├── auth.cy.ts
-│   ├── navigation.cy.ts
-│   └── features.cy.ts
-├── fixtures/
-│   ├── auth.json
-│   └── dashboard.json
-└── support/
-    ├── commands.ts
-    └── e2e.ts
-```
-
-### Config
-
-[`cypress.config.ts`](cypress.config.ts) — base URL `http://localhost:5173`, specs in `cypress/e2e/**/*.cy.ts`.
-
-### Scripts
+## E2E (Cypress)
 
 | Command | Purpose |
 |---------|---------|
-| `npm run cy:open` | Interactive Cypress runner |
-| `npm run cy:run` | Headless (dev server must be running) |
-| `npm run test:e2e` | Starts BE + FE, then runs Cypress |
+| `npm run cy:open` | Interactive runner |
+| `npm run test:e2e` | Headless (starts dev server) |
 
-**Core idea:** Cypress tests behave like real users — click, type, navigate — not test implementation details.
+Specs: `cypress/e2e/auth.cy.ts`, `features.cy.ts`, `navigation.cy.ts`
 
-Integration tests (`npm run test:integration`) require a live NestJS API. E2E can run with mocked API responses depending on test setup.
+## Forms
 
----
-
-# 12. Forms + Validation
-
-### Auth forms — RHF + zod (fully implemented)
-
-Schemas in [`src/modules/auth/schemas.ts`](src/modules/auth/schemas.ts):
-
-```ts
-import { z } from 'zod'
-
-export const loginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(6),
-})
-
-export const registerSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.email(),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-})
-
-export const forgotPasswordSchema = z.object({
-  email: z.email(),
-})
-```
-
-Usage pattern (LoginPage):
-
-```tsx
-const form = useForm<LoginFormData>({
-  resolver: zodResolver(loginSchema),
-  defaultValues: { email: '', password: '' },
-})
-```
-
-UI uses shadcn `Form` components from [`src/components/ui/form.tsx`](src/components/ui/form.tsx).
-
-| Page | Validation | Submit path |
-|------|------------|-------------|
+| Page | Validation | Submit |
+|------|------------|--------|
 | LoginPage | zod + RHF | Redux `login` thunk |
-| RegisterPage | zod + RHF | Direct `authApi.register` (redirects to login; does not auto-login) |
-| ForgotPasswordPage | zod + RHF | Direct `authApi.forgotPassword` |
-
-### Entity CRUD forms — different pattern
-
-[`src/components/EntityFormDialog.tsx`](src/components/EntityFormDialog.tsx) uses `useState`, not RHF/zod. Fields: `name` + `status` only. This is sufficient for the generic scaffold but not for production domain-specific forms.
-
-**When extending:** Add per-module zod schemas and RHF forms when moving beyond generic CRUD (e.g. employee hire form, leave request form).
+| RegisterPage | zod + RHF | `authApi.register` → redirect login |
+| ForgotPasswordPage | zod + RHF | `authApi.forgotPassword` |
+| Entity CRUD | local state in `EntityFormDialog` | TanStack Query mutations |
 
 ---
 
-# Recommended Order for Enterprise Project
+# Build Order Summary
 
-Follow this order when bootstrapping a new project or onboarding a feature team:
+Follow this exact sequence:
 
-1. Folder structure
-2. Layouts
-3. Routing
-4. Authentication foundation
-5. Reusable UI components
-6. Vitest + React Testing Library setup
-7. Redux UI slice
-8. Axios + interceptors
-9. TanStack Query setup
-10. Feature modules
-11. E2E testing (Cypress)
-12. Forms and validation (per feature, beyond generic CRUD)
-
-For a React + Redux Toolkit + TanStack Query + shadcn enterprise application, **Layouts → Routing → Authentication** is usually the next step after scaffolding. That gives the application a skeleton before reusable components and business features.
+1. **Project structure** — folders and conventions
+2. **UI primitives** — shadcn minimum + `PageLoader` (before auth forms)
+3. **Layouts** — `PublicLayout`, `AuthLayout`
+4. **Routing** — public + auth routes, `lazyRoutes`, `SuspenseWrap`
+5. **API layer** — `httpClient`, `authApi`, `errors`
+6. **Authentication** — store, `authSlice`, `LoginPage`, bootstrap, `AuthGate`, `AppProviders`
+7. **Global UI state** — `uiSlice`, theme
+8. **Dashboard shell** — `components/layout/*`, `DashboardLayout`, protected routes
+9. **Shared app components** — `EntityListPage`, dialogs, `PageShell`
+10. **Vitest** — setup, `renderWithProviders`, first tests
+11. **API resources + TanStack Query** — domain APIs, factory, query hooks
+12. **Feature modules** — CRUD pages, Cypress, per-feature forms
 
 ---
 
-# Known Gaps and Honest Expectations
+# Known Gaps
 
-Read this section to avoid surprises:
-
-| Topic | Reality in this codebase |
-|-------|--------------------------|
-| Test runner | **Vitest**, not Jest (Jest-compatible API only) |
-| Feature folder name | **`modules/`**, not `features/` |
-| List pages | Most are **API-wired but UI-generic** (name + status fields only) |
-| Reset password | `ROUTES.resetPassword` constant exists; **no page or router entry** |
-| Route permissions | `ProtectedRoute` supports `permissions` prop; **not wired in router yet** |
-| FE action permissions | Sidebar/search filter only; **CRUD buttons not gated** by `RequirePermission` |
-| Register flow | Does **not** auto-login; redirects to login page |
-| Integration tests | Require **live backend** (Docker Postgres + NestJS) |
-| E2E tests | Can run with mocked API; `test:e2e` starts full stack by default |
+| Topic | Reality |
+|-------|---------|
+| Test runner | **Vitest**, not Jest |
+| Feature folder | **`modules/`**, not `features/` |
+| Reset password | Constant exists; **no page or route** |
+| Route permissions | `ProtectedRoute permissions` prop **not wired** |
+| FE action permissions | Sidebar filter only; CRUD buttons **not gated** |
+| Register | Does **not** auto-login |
+| Integration tests | Require **live backend** |
 | Entity forms | `EntityFormDialog` uses local state, not RHF/zod |
-| Cross-module imports | **Forbidden** by ESLint boundaries rule |
+| Cross-module imports | **Forbidden** by ESLint |
 
 ---
 
@@ -1082,18 +810,15 @@ Read this section to avoid surprises:
 | Auth slice | `src/slices/authSlice.ts` |
 | UI slice | `src/slices/uiSlice.ts` |
 | HTTP + tokens | `src/services/httpClient.ts` |
+| Auth API | `src/services/api/authApi.ts` |
 | API factory | `src/services/api/client.ts` |
-| Endpoints | `src/constants/endpoints.ts` |
 | Routes | `src/routes/index.tsx`, `lazyRoutes.tsx`, `protectedRoute.tsx` |
 | Route paths | `src/constants/routes.ts` |
 | Navigation | `src/constants/navigation.ts` |
 | Query client | `src/lib/queryClient.ts` |
 | Query factory | `src/queries/factory.ts` |
-| Query keys | `src/lib/queryKeys.ts` |
-| CRUD orchestration | `src/hooks/useEntityCrudPage.ts` |
-| Generic list UI | `src/components/EntityListPage.tsx` |
+| CRUD UI | `src/components/EntityListPage.tsx` |
 | Auth schemas | `src/modules/auth/schemas.ts` |
 | shadcn config | `components.json` |
-| Vitest config | `vitest.config.ts` |
+| Vitest | `vitest.config.ts` |
 | Test utils | `src/test/utils.tsx` |
-| Cypress config | `cypress.config.ts` |
