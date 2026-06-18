@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector, toggleSidebar } from '@/store/store'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button_old'
 
 export default function TestRedux() {
     const isSidebarOpen = useAppSelector((state) => state.ui.sidebarOpen)
