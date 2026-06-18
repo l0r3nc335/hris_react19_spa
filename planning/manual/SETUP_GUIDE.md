@@ -3,7 +3,7 @@
 **Literal build-order manual.** Follow sections **1 → 12** in sequence when scaffolding this app from scratch. Each step lists the files to create and the minimum code to wire before moving on.
 
 - Quick start commands: [README.md](./README.md)
-- Extended reference (all topics, more detail): [SETUP_GUIDE.md](./SETUP_GUIDE.md)
+- Extended reference (all topics, more detail): [README_NOTES.md](./README_NOTES.md)
 
 ---
 
@@ -98,16 +98,239 @@ src/
 
 ---
 
-# 2. UI Primitives
+# 2. LAYOUTS AND COMPONENTS LAYOUT
+
+### Build the application's skeleton.
+
+## LAYOUTS
+Create the skeleton:
+
+    layouts/
+    ├── AuthLayout.tsx
+    ├── DashboardLayout.tsx
+    ├── PublicLayout.tsx
+Example:
+
+        AuthLayout.tsx
+        ├── Header
+        ├── Outlet / Content
+        └── Footer
+    
+        DashboardLayout.tsx
+        ├── AppSidebar
+        ├── AppHeader
+        ├── Outlet / Content
+        └── AppFooter
+    
+        PublicLayout.tsx
+        ├── Sidebar
+        ├── Header
+        ├── Content
+        └── Footer
+
+## COMPONENTS LAYOUT
+Create the skeleton:
+
+    components/layout
+    ├── AppBreadcrumbs.tsx
+    ├── AppFooter.tsx
+    ├── AppHeader.tsx
+    ├── AppSidebar.tsx
+    ├── GlobalSearch.tsx
+    ├── MessageInbox.tsx
+    ├── NotificationBell.tsx
+    ├── PageShell.tsx
+    ├── PublicNavbar.tsx
+
+-----------------------------------------------------------------------------------
+
+
+# 3. Routing FE
+
+Install:
+```sh
+    npm install react-router-dom
+```
+
+Create the skeleton:
+
+    /routes
+    ├── index.tsx
+    ├── lazyRoutes.ts
+    ├── protectedRoutes.tsx
+
+    /constants
+    ├── routes.ts
+
+    /modules
+    ├── public
+    │   ├── pages/LandingPage
+    ├── auth
+    │   ├── pages/LoginPage
+    ├── dashboard
+    │   ├── pages/DashboardPage
+
+    /components
+    │   ├── ui/skeleton.tsx
+    ├── PageLoader.tsx
+
+### /components/ui/skeleton
+creates skeleton ui for the Lazy.AnyPage and used in the loader
+```tsx
+    import { cn } from '@/lib/utils'
+    export default function Skeleton({className, ...props}: React.ComponentProps<"div">){
+        return(
+            <div
+                data-slot="skeleton"
+                className={cn("animate-pulse rounded-md bg-muted", className)}
+                {...props}
+            />
+        )
+    }
+```    
+### /components/PageLoader.tsx
+```tsx
+    import Skeleton from "@/components/ui/skeleton"
+    export function PageLoader(): React.JSX.Element {
+        return (
+            <div className="flex min-h-[200px] flex-col gap-3 p-4">
+                <Skeleton className="h-8 w-1/3" />
+                <div className="mt-4 space-y-3">
+                    <Skeleton className="h-10 w-full" />
+                </div>
+            </div>
+        )
+    }
+```
+
+### /constants/routes.ts:
+```ts
+    export const ROUTES = {
+       landing: '/',
+       login: '/auth/login',
+       dashboard: '/dashboard' 
+    } as const
+```
+
+## Layouts for route - /src/layouts
+### AuthLayout
+```tsx
+    import { Outlet } from 'react-router-dom'
+    export default function AuthLayout(): React.JSX.Element {
+        return (
+            <div className="flex min-h-screen flex-col bg-muted">
+                <header className="border-b border-border bg-card px-6 py-4">
+                    Header
+                </header>
+                <div className="flex flex-1 items-center justify-center p-4">
+                    <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 shadow-sm">
+                    <Outlet />
+                    </div>
+                </div>
+            </div>
+        )
+}
+```
+### PublicLayout
+```tsx
+    import { Outlet } from 'react-router-dom'
+    export default function PublicLayout(): React.JSX.Element {
+        return (<Outlet />)
+    }
+```
+### DashboardPage
+```tsx 
+    export function DashboardPage(): React.JSX.Element {
+        return(<h1>DASHBOARD - this should be protected by ahout</h1>)
+    }
+```
+
+## ROUTES
+### /routes/lazyRoutes.ts
+```ts
+    import { lazy } from 'react'
+    export const LandingPage = lazy(() =>
+        import('@/modules/public/pages/LandingPage').then((m) => ({ default: m.LandingPage })),
+    )
+    export const LoginPage = lazy(() =>
+        import('@/modules/auth/pages/LoginPage').then((m) => ({default: m.LoginPage}))
+    )
+    export const Dashboard = lazy (() =>
+        import('@/modules/dashboard/pages/DashboardPage').then((m) => ({default: m.DashboardPage}))
+    )
+```
+### /routes/protectedRoutes.ts
+```tsx
+    export default function ProtectedRoute(): React.JSX.Element {
+        return(<></>)
+    }
+```    
+
+### /routes/index.tsx
+Includes: Suspense wrap, lazy loading and Page Loader
+```tsx
+    import AuthLayout from "@/layouts/AuthLayout";
+    import DashboardLayout from "@/layouts/DashboardLayout";
+    import PublicLayout from "@/layouts/PublicLayout";
+    import { Suspense, type ReactNode } from "react";
+    import { createBrowserRouter, Navigate } from 'react-router-dom'
+    interface SuspenseWrapProps {
+        children: ReactNode
+    }
+    function SuspenseWrapProp({children}: SuspenseWrapProps): React.JSX.Element
+    {
+        return<Suspense fallback="">{children}</Suspense>
+    }
+
+    export const router = createBrowserRouter([
+        {
+            element: <PublicLayout />,
+            children: [
+                //e.g:
+                //{ index: true, element: <SuspenseWrap><Lazy.LandingPage /></SuspenseWrap> },
+                //{ path: 'about', element: <SuspenseWrap><Lazy.AboutPage /></SuspenseWrap> },
+                { index: true, element: <SuspenseWrap><Lazy.LandingPage /> </SuspenseWrap> },
+                {}
+            ]
+        },
+        {
+            path: '/auth',
+            element: <AuthLayout />,
+            children: [
+                { path: 'login', index: true, element: <Suspense> <Lazy.LoginPage /> </Suspense> },
+                { path: '', element: <Suspense> <Lazy.LoginPage /> </Suspense> }
+            ]
+        },
+        {
+            element: <ProtectedRoute />,
+            children: [
+                {
+                    element: <DashboardLayout />,
+                    children: [
+                        { path: 'dashboard', element: <SuspenseWrap> <Lazy.Dashboard /> </SuspenseWrap>},
+                        //{ path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
+                    ]
+                },
+            ]
+        },
+        { path: 'logout', element: <Navigate to={ROUTES.login} replace /> },
+        { path: '*', element: <Navigate to={ROUTES.landing} replace /> }
+    ])
+```
+
+### src/App.tsx updates
+```tsx
+    import { RouterProvider } from 'react-router-dom'
+    import { router } from '@/routes/index'
+    export default function App(): React.JSX.Element {
+        return (<RouterProvider router={router} />)
+    }
+```
+---------------------------------------------------------------------------
+
+# 4. UI Primitives
 
 ### Install shadcn primitives
-
-    button
-    input
-    label
-    card
-    skeleton
-
 Install via shadcn CLI
 ```sh
     npx shadcn@latest add button
@@ -120,114 +343,41 @@ Install via shadcn CLI
 
 Add more primitives later as features need them (`table`, `dialog`, `sheet`, etc.).
 
-## `ui/` barrel
+### UI barrel `src/ui/index.ts`
+[`src/ui/index.ts`] re-exports of common primitives:
 
-[`src/ui/index.ts`](src/ui/index.ts) re-exports common primitives:
+### Flow:
+`src/components/ui/{tooltip}` => `src/ui/{ToolTip}` => `src/ui/index.ts` => `src/app/providers/{TooltipProvider.tsx}`
+
+### Explanation:
+`src/components/ui/{tooltip}` - small ui which came form shadcn-ui
+`src/ui/{ToolTip}` - GROUP of multiple chadcn-ui
+`src/ui/index.ts` - Barrel, COMPOSITION Group of multiple chadcn-ui****
+`src/app/providers/{TooltipProvider.tsx}` - Implementation layer. can be  Module or in App
+
+`src/ui` is for 
+
 
 ```ts
-export { Button, buttonVariants } from '@/components/ui/button'
-export { Input } from '@/components/ui/input'
-// … re-export what pages import from @/ui
+    export { Button, buttonVariants } from '@/components/ui/button'
+    export { Input } from '@/components/ui/input'
+    export { Label } from '@/components/ui/label'
+    export { Textarea } from '@/components/ui/textarea'
+    export { Select } from './Select'
+    export { Modal } from './Modal'
+    export { Dropdown } from './Dropdown'
+    export { Tooltip, TooltipProvider } from './Tooltip'
+    export { Tabs } from './Tabs'
+    export {
+        Table,
+        TableHeader,
+        TableBody,
+        TableRow,
+        TableHead,
+        TableCell,
+    } from '@/components/ui/table'
 ```
-
-## PageLoader (Suspense fallback)
-
-```tsx
-// src/components/ui/skeleton.tsx — shadcn skeleton
-import { cn } from '@/lib/utils'
-
-function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
-  return (
-    <div className={cn('animate-pulse rounded-md bg-muted', className)} {...props} />
-  )
-}
-export { Skeleton }
-```
-
-```tsx
-// src/components/PageLoader.tsx
-import { Skeleton } from '@/components/ui/skeleton'
-
-export function PageLoader(): React.JSX.Element {
-  return (
-    <div className="flex min-h-[200px] flex-col gap-3 p-4">
-      <Skeleton className="h-8 w-1/3" />
-      <Skeleton className="h-4 w-1/2" />
-      <Skeleton className="h-10 w-full" />
-    </div>
-  )
-}
-```
-
-**Import convention:** `@/components/ui/*` for shadcn; `@/ui` for the barrel.
-
----
-
-# 3. Layouts
-
-### Build public and auth shells first. Dashboard shell completes in §8.
-
-## Layout map
-
-| Layout | Routes | Structure |
-|--------|--------|-----------|
-| `PublicLayout` | `/`, `/about`, `/pricing`, `/contact` | `PublicNavbar` → `<Outlet>` |
-| `AuthLayout` | `/auth/login`, `/auth/register`, `/auth/forgot-password` | Header → centered card → footer |
-| `DashboardLayout` | Protected app routes (**§8**) | `AppSidebar` → `AppHeader` → `<Outlet>` → `AppFooter` |
-
-`PublicLayout` and `AuthLayout` redirect authenticated users to `ROUTES.home` (`/dashboard`).
-
-### PublicLayout
-
-```tsx
-// src/layouts/PublicLayout.tsx
-import { Outlet, Navigate } from 'react-router-dom'
-import { useAppSelector } from '@/hooks'
-import { selectIsAuthenticated } from '@/slices/authSlice'
-import { ROUTES } from '@/constants/routes'
-import { PublicNavbar } from '@/components/layout/PublicNavbar'
-
-export function PublicLayout(): React.JSX.Element {
-  const isAuthenticated = useAppSelector(selectIsAuthenticated)
-  if (isAuthenticated) return <Navigate to={ROUTES.home} replace />
-  return (
-    <div className="flex h-screen flex-col overflow-hidden bg-background">
-      <PublicNavbar />
-      <main className="flex min-h-0 flex-1 overflow-hidden"><Outlet /></main>
-    </div>
-  )
-}
-```
-
-### AuthLayout
-
-```tsx
-// src/layouts/AuthLayout.tsx
-import { Link, Outlet, Navigate } from 'react-router-dom'
-import { useAppSelector } from '@/hooks'
-import { selectIsAuthenticated } from '@/slices/authSlice'
-import { ROUTES } from '@/constants/routes'
-
-export function AuthLayout(): React.JSX.Element {
-  const isAuthenticated = useAppSelector(selectIsAuthenticated)
-  if (isAuthenticated) return <Navigate to={ROUTES.home} replace />
-  return (
-    <div className="flex min-h-screen flex-col bg-muted">
-      <header className="border-b border-border bg-card px-6 py-4">
-        <Link to={ROUTES.landing} className="flex items-center gap-2 font-semibold">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">H</div>
-          HRIS Enterprise
-        </Link>
-      </header>
-      <div className="flex flex-1 items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 shadow-sm">
-          <Outlet />
-        </div>
-      </div>
-    </div>
-  )
-}
-```
+----------------------------------------------------------------------------------
 
 ---
 
