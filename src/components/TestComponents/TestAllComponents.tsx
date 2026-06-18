@@ -7,6 +7,7 @@ import TestReactHookForm from '@/components/TestComponents/TestReactHookForm'
 import TestAxios from '@/components/TestComponents/TestAxios'
 import TestTanStackQeury from '@/components/TestComponents/TestTanStackQeury'
 import TestRedux from '@/components/TestComponents/TestRedux'
+import TestUi from './TestUi'
 
 export default function TestAllComponents() {
     return (
@@ -20,6 +21,7 @@ export default function TestAllComponents() {
             <TestAxios />
             <TestTanStackQeury />
             <TestRedux />
+            <TestUi />
         </>
     )
 }

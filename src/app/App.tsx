@@ -11,7 +11,7 @@ export default function App(): React.JSX.Element
 
   return (
     <>
-      {false && <TestAllComponents />} 
+      {true && <TestAllComponents />} 
       <RouterProvider router={router} />
     </>
   )
