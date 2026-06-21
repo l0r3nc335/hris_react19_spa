@@ -1,4 +1,5 @@
 # HRIS Enterprise Frontend — Build Guide
+## 2 SECOND SETUP GUIDE
 
 **Literal build-order manual.** Follow sections **1 → 12** in sequence when scaffolding this app from scratch. Each step lists the files to create and the minimum code to wire before moving on.
 

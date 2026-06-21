@@ -1,0 +1,3 @@
+# FE AUTH HTTP-ONLY MANUAL SETUP
+### This is a traced, manual setup of http-only authenticaion from another codebased
+### Strategy here is via tracing from configs, to main.ts to app.tsx upto the lowest component involved

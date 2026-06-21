@@ -1,4 +1,5 @@
 # my_react_ground_up_manual
+## 1 FIRST SETUP GUIDE
 
 ## Install React
 ```sh
@@ -147,7 +148,12 @@ Implement the buttons variants in
 
     src\App.tsx
 
+
+
 ## Radix UI (Primitives)
+```sh
+    npm install radix-ui
+```
 ```sh 
   npm install @radix-ui/react-dialog
 ```
