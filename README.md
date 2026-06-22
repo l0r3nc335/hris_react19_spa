@@ -73,3 +73,27 @@ export default defineConfig([
   },
 ])
 ```
+
+
+# BRANCHES
+### ENTERPRISE_GRADE_STRUCTURED_MPV
+As the branch name said, it is the Enterprise grade, structured MVP, with minimum viable items for the following:
+
+  Authentication
+  Components
+  Client state management
+  Server state management
+  Modular domain
+  Private routing
+  Public routing
+  Layouts
+  API / HTTP client
+  Lazy loading
+  Form validation
+  Toast notifications
+  Theme
+  Permissions
+  Error handling
+  Error logging
+
+  
