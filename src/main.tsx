@@ -1,19 +1,22 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import '@/app/instrumentation'
+
+import { App } from '@/app/App'
+import { AppProviders } from '@/app/providers/AppProviders'
+import { bootstrapAuth } from '@/bootstrap'
+import { store } from '@/store'
 import './index.css'
-import App from '@/app/App.tsx'
-import { Provider } from 'react-redux'
-import { store } from '@/store/store'
 
-const queryClient = new QueryClient()
+const root = document.getElementById('root')
+if (!root) throw new Error('Root element not found')
 
-createRoot(document.getElementById('root')!).render(
+bootstrapAuth(store)
+
+createRoot(root).render(
   <StrictMode>
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </Provider>
+    <AppProviders store={store}>
+      <App />
+    </AppProviders>
   </StrictMode>,
 )

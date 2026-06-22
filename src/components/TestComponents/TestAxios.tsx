@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { api } from '@/services/api/axios'
+import { api } from '@/services/axios'
 
 export default function TestAxios() {
     const [data, setData] = useState('')

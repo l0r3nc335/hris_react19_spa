@@ -1,5 +1,9 @@
 export const ROUTES = {
    landing: '/',
    login: '/auth/login',
-   dashboard: '/dashboard' 
+   register: '/auth/login',
+   forgotPassword: '/auth/forgot-password',
+   resetPassword: '/auth/reset-password',
+   dashboard: '/dashboard',
+   users: '/users',
 } as const

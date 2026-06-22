@@ -1,0 +1,1 @@
+export { bootstrapAuth } from './auth'

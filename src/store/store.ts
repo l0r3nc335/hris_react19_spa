@@ -1,3 +1,5 @@
+//store user to test the redux only
+
 import { createSlice, configureStore } from '@reduxjs/toolkit'
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
