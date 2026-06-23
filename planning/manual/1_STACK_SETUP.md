@@ -87,6 +87,7 @@ https://zod.dev/basics
 ## Tailwind
 ```sh
     npm i tailwindcss @tailwindcss/vite
+    npm install tw-animate-css
 ```
 
     import and add plugins in to ./vite.config.ts

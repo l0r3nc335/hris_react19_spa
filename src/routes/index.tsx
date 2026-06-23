@@ -25,7 +25,9 @@ export const router = createBrowserRouter([
             //{ index: true, element: <SuspenseWrap><Lazy.LandingPage /></SuspenseWrap> },
             //{ path: 'about', element: <SuspenseWrap><Lazy.AboutPage /></SuspenseWrap> },
             { index: true, element: <SuspenseWrap><Lazy.LandingPage /> </SuspenseWrap> },
-            {}
+            { path: 'about', element: <SuspenseWrap><Lazy.AboutPage /> </SuspenseWrap> },
+            { path: 'pricing', element: <SuspenseWrap><Lazy.PricingPage /> </SuspenseWrap> },
+            { path: 'contact-us', element: <SuspenseWrap><Lazy.ContactPage /> </SuspenseWrap> },
         ]
     },
     {
@@ -48,6 +50,6 @@ export const router = createBrowserRouter([
             },
         ]
     },
-    { path: 'logout', element: <Navigate to={ROUTES.login} replace /> },
-    { path: '*', element: <Navigate to={ROUTES.landing} replace /> }
+    { path: 'logout', element: <Navigate to={ROUTES.auth.login} replace /> },
+    { path: '*', element: <Navigate to={ROUTES.public.landing} replace /> }
 ])
