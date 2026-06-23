@@ -1,5 +1,5 @@
 import AuthLayout from "@/layouts/AuthLayout"
-import DashboardLayout from "@/layouts/DashboardLayout"
+import { DashboardLayout } from "@/layouts/DashboardLayout"
 import PublicLayout from "@/layouts/PublicLayout"
 import { Suspense, type ReactNode } from "react"
 import { createBrowserRouter, Navigate } from 'react-router-dom'
@@ -35,7 +35,7 @@ export const router = createBrowserRouter([
         element: <AuthLayout />,
         children: [
             { path: 'login', index: true, element: <Suspense> <Lazy.LoginPage /> </Suspense> },
-            { path: '', element: <Suspense> <Lazy.LoginPage /> </Suspense> }
+            { path: 'forgot-password', element: <Suspense> <Lazy.ForgotPasswordPage /> </Suspense> }
         ]
     },
     {

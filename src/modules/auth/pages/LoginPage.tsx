@@ -17,29 +17,38 @@ import {
 import { ROUTES } from '@/constants/routes'
 import { loginSchema, type LoginFormData } from '../schemas'
 import { PublicPageShell } from '@/modules/public/pages/PublicPageShell'
+import { useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
 
 export function LoginPage(): React.JSX.Element {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const { status, error } = useAppSelector(selectAuth)
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
-  })
+    const [urlParam] = useSearchParams ()
+    const [ companyId ] = useState(urlParam.get('companyId'))
+    /*useEffect(() => {
+        console.log(companyId)
+    }, [])*/
+    
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+    const { status, error } = useAppSelector(selectAuth)
 
-  const onSubmit = (data: LoginFormData): void => {
-    void dispatch(login(data))
-      .then((result) => {
-        if (login.fulfilled.match(result)) navigate(ROUTES.dashboard.dashboard)
-      })
-      .catch(() => undefined)
-  }
+    const form = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: { email: '', password: '' },
+    })
 
-  return (
+    const onSubmit = (data: LoginFormData): void => {
+        void dispatch(login(data))
+        .then((result) => {
+            if (login.fulfilled.match(result)) navigate(ROUTES.dashboard.dashboard)
+        })
+        .catch(() => undefined)
+    }
+
+    return (
     <PublicPageShell>
         <div className="grid gap-4 md:grid-cols-2 md:gap-6">
             <div className="space-y-3">
-                Company Logo
+                { companyId?.length > 0 ? companyId : null }
             </div>
 
             <Card>
