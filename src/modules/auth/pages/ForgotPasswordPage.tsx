@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/form'
 import { ROUTES } from '@/constants/routes'
 import { forgotPasswordSchema, type ForgotPasswordFormData } from '../schemas'
+import { CardEdgeGlow } from '@/components/animations/CardEdgeGlow'
 
 export function ForgotPasswordPage(): React.JSX.Element {
   const [success, setSuccess] = useState(false)
@@ -51,57 +52,59 @@ export function ForgotPasswordPage(): React.JSX.Element {
                 sdasdasd
             </div>
             
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-2xl">Forgot  password</CardTitle>
-                    <CardDescription>
-                        Enter your email to receive a password reset link
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-6">
-                {success ? (
-                <Alert>
-                    <AlertDescription>
-                    If an account exists for that email, a reset link has been sent.
-                    </AlertDescription>
-                </Alert>
-                ) : (
-                <Form {...form}>
-                    <form
-                    className="space-y-4"
-                    onSubmit={(e) => {
-                        void form.handleSubmit(onSubmit)(e)
-                    }}
-                    >
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                            <Input type="email" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    {error ? (
-                        <Alert variant="destructive">
-                        <AlertDescription>{error}</AlertDescription>
-                        </Alert>
-                    ) : null}
-                    <Button type="submit" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting ? 'Sending...' : 'Send reset link'}
-                    </Button>
-                    </form>
-                </Form>
-                )}
-                <Link to={ROUTES.auth.login} className="mt-4 inline-block text-sm text-primary hover:underline">
-                Back to login
-                </Link>
-                </CardContent>
-            </Card>
+            <CardEdgeGlow className="w-full">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-2xl">Forgot  password</CardTitle>
+                        <CardDescription>
+                            Enter your email to receive a password reset link
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                    {success ? (
+                    <Alert>
+                        <AlertDescription>
+                        If an account exists for that email, a reset link has been sent.
+                        </AlertDescription>
+                    </Alert>
+                    ) : (
+                    <Form {...form}>
+                        <form
+                        className="space-y-4"
+                        onSubmit={(e) => {
+                            void form.handleSubmit(onSubmit)(e)
+                        }}
+                        >
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                <Input type="email" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        {error ? (
+                            <Alert variant="destructive">
+                            <AlertDescription>{error}</AlertDescription>
+                            </Alert>
+                        ) : null}
+                        <Button type="submit" className="w-full" disabled={isSubmitting}>
+                            {isSubmitting ? 'Sending...' : 'Send reset link'}
+                        </Button>
+                        </form>
+                    </Form>
+                    )}
+                    <Link to={ROUTES.auth.login} className="mt-4 inline-block text-sm text-primary hover:underline">
+                    Back to login
+                    </Link>
+                    </CardContent>
+                </Card>
+            </CardEdgeGlow>
         </div>
         
     </PublicPageShell>
