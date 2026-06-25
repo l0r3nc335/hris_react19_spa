@@ -68,6 +68,10 @@ const authSlice = createSlice({
     clearAuthError(state) {
       state.error = null
     },
+    startSessionRestore(state) {
+      state.status = 'loading'
+      state.error = null
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -81,6 +85,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true
         setTenantId(action.payload.user.tenantId)
       })
+      // LOGIN RELATED ERROR STATE ASSIGNMENT
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed'
         state.error = (action.payload as string) ?? 'Login failed'
@@ -96,6 +101,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchMe.rejected, (state) => {
         state.status = 'failed'
+        if (state.isAuthenticated && state.user) return
         state.isAuthenticated = false
         state.user = null
         clearSession()
@@ -109,7 +115,7 @@ const authSlice = createSlice({
   },
 })
 
-export const { clearAuthError } = authSlice.actions
+export const { clearAuthError, startSessionRestore } = authSlice.actions
 export const authReducer = authSlice.reducer
 export const selectAuth = (state: RootState): AuthState => state.auth
 export const selectUser = (state: RootState): User | null => state.auth.user
