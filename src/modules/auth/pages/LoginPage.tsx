@@ -20,6 +20,8 @@ import { PublicPageShell } from '@/modules/public/pages/PublicPageShell'
 import { CardEdgeGlow } from '@/components/animations/CardEdgeGlow'
 import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
+//import { Canvas } from '@react-three/fiber'
+//import Experience from '@/components/animations/Experience'
 
 export function LoginPage(): React.JSX.Element {
     const [urlParam] = useSearchParams ()

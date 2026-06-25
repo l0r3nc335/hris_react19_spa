@@ -51,7 +51,7 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'overview',
     label: 'Overview',
     items: [
-      { label: 'Dashboard', path: ROUTES.dashboard, icon: LayoutDashboard },
+      { label: 'Dashboard', path: ROUTES.dashboard.dashboard, icon: LayoutDashboard },
       //{ label: 'Analytics', path: ROUTES.analytics, icon: BarChart3 },
     ],
   },
@@ -59,7 +59,7 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'people',
     label: 'People & Organization',
     items: [
-      { label: 'Users', path: ROUTES.users, icon: Users, permission: PERMISSIONS.usersRead },
+      { label: 'Users', path: ROUTES.people.users, icon: Users, permission: PERMISSIONS.usersRead },
       //{ label: 'Employees', path: ROUTES.employees, icon: UserCircle, permission: PERMISSIONS.employeesRead },
       //{ label: 'Employee Department', path: ROUTES.employeeDepartments, icon: GitBranch, permission: PERMISSIONS.employeeDepartmentsRead },
       //{ label: 'Departments', path: ROUTES.departments, icon: Building2, permission: PERMISSIONS.departmentsRead },

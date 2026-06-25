@@ -3,7 +3,7 @@ import { DashboardLayout } from "@/layouts/DashboardLayout"
 import PublicLayout from "@/layouts/PublicLayout"
 import { Suspense, type ReactNode } from "react"
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import ProtectedRoute from "./protectedRoute"
+import { ProtectedRoute } from "./protectedRoute"
 import * as Lazy from '@/routes/lazyRoutes'
 import { PageLoader } from "@/components/PageLoader"
 import { ROUTES } from "@/constants/routes"

@@ -1,14 +1,17 @@
 export const PERMISSIONS = {
     usersRead: 'users:read',
     usersWrite: 'users:write',
+
     employeesRead: 'employees:read',
     employeesWrite: 'employees:write',
     employeeDepartmentsRead: 'employee-departments:read',
     employeeDepartmentsWrite: 'employee-departments:write',
-    departmentsRead: 'departments:read',
-    leaveApprove: 'leave:approve',
+
     payrollRead: 'payroll:read',
     payrollRun: 'payroll:run',
+
+    departmentsRead: 'departments:read',
+    leaveApprove: 'leave:approve',
     rolesManage: 'roles:manage',
     tenantsManage: 'tenants:manage',
     auditRead: 'audit:read',

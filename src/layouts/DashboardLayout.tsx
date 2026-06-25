@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import { useAppSelector } from '@/hooks'
 import { cn } from '@/lib/utils'
-//import { AppSidebar } from '@/components/layout/AppSidebar'
+import { AppSidebar } from '@/components/layout/AppSidebar'
 import { AppHeader } from '@/components/layout/AppHeader'
 //import { AppFooter } from '@/components/layout/AppFooter'
 
@@ -17,6 +17,7 @@ export function DashboardLayout(): React.JSX.Element {
         )}
       >
         {/*<AppSidebar collapsed={!sidebarOpen} />*/}
+        <AppSidebar collapsed={!sidebarOpen}/>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <AppHeader />

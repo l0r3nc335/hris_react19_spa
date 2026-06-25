@@ -6,6 +6,8 @@ const lifecycle = (base: string) => ({
   restore: (entityId: string) => `${base}/${entityId}/restore`,
 })
 
+// ENV - DEV ONLY
+//VITE_DEV_PROXY_TARGET=http://localhost:3000
 export const endpoints = {
   auth: {
     login: '/auth/login',
