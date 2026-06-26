@@ -22,6 +22,10 @@ export const ROUTES = {
       users: '/users',
    },
    
+   system: {
+      settings: '/settings',
+   }, 
+
    /*
    time: {
 
@@ -39,9 +43,7 @@ export const ROUTES = {
 
    },
 
-   system: {
 
-   }, 
 
    security: {
 

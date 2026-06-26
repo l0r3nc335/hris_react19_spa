@@ -1,11 +1,62 @@
-import { NAV_GROUPS } from "@/constants/navigation"
+import { NAV_GROUPS, type NavItem } from "@/constants/navigation"
 import { useAppDispatch, useAppSelector } from "@/hooks"
 import { usePermission } from "@/hooks/usePermission"
+import { setSidebarSearchQuery, toggleSidebar } from "@/slices/uiSlice"
+import { Button, Input, Tooltip } from "@/ui"
+import { PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
+import { ScrollArea } from "../ui/scroll-area"
+import { NavLink } from "react-router-dom"
+import { ROUTES } from "@/constants/routes"
+import { cn } from "@/lib/utils"
 
 interface AppSidebarProps {
     onNavigate?: () => void,
     collapsed?: boolean 
 }
+
+function navLinkClassName(collapsed: boolean, isActive: boolean): string {
+    return cn(
+      'flex rounded-md text-sm transition-colors',
+      collapsed
+        ? 'mx-auto size-9 items-center justify-center'
+        : 'items-center gap-2 px-3 py-2',
+      isActive
+        ? 'bg-primary text-primary-foreground'
+        : 'text-sidebar-foreground hover:bg-accent',
+    )
+}
+
+function SidebarNavItem({
+    item,
+    collapsed,
+    onNavigate,
+  }: {
+    item: NavItem
+    collapsed: boolean
+    onNavigate?: () => void
+  }): React.JSX.Element {
+    const link = (
+      <NavLink
+        to={item.path}
+        end={item.path === ROUTES.dashboard.dashboard}
+        onClick={onNavigate}
+        className={({ isActive }) => navLinkClassName(collapsed, isActive)}
+      >
+        <item.icon className={cn('h-4 w-4 shrink-0', collapsed && 'my-2 mx-auto')} />
+        {!collapsed ? item.label : null}
+      </NavLink>
+    )
+  
+    if (collapsed) {
+      return (
+        <Tooltip content={item.label} side="right">
+          {link}
+        </Tooltip>
+      )
+    }
+  
+    return link
+  }
 
 export function AppSidebar({
     onNavigate,
@@ -29,7 +80,73 @@ export function AppSidebar({
         }),
     })).filter((group) => group.items.length > 0)
 
-    console.log(filteredGroups)
+    const flatItems = filteredGroups.flatMap((group) => group.items)
 
-    return (<></>)
+    const sidebarToggle = (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => dispatch(toggleSidebar())}
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? (
+            <PanelLeftOpen className="h-5 w-5" />
+          ) : (
+            <PanelLeftClose className="h-5 w-5" />
+          )}
+        </Button>
+    )
+
+    if (collapsed) {
+        return (
+          <div className="flex h-full flex-col">
+            <div className="flex h-14 items-center justify-center border-b border-sidebar-border">
+              {sidebarToggle}
+            </div>
+            <ScrollArea className="flex-1">
+              <nav className="space-y-1 p-2">
+                {flatItems.map((item) => (
+                  <SidebarNavItem
+                    key={item.path}
+                    item={item}
+                    collapsed
+                    onNavigate={onNavigate}
+                  />
+                ))}
+              </nav>
+            </ScrollArea>
+            <div className="border-t border-sidebar-border p-2">
+              <Tooltip content="Settings" side="right">
+                <NavLink
+                  to={ROUTES.system.settings}
+                  onClick={onNavigate}
+                  className={({ isActive }) => navLinkClassName(true, isActive)}
+                >
+                  <Settings className="h-4 w-4" />
+                </NavLink>
+              </Tooltip>
+            </div>
+          </div>
+        )
+    }
+
+    return (
+        <div className="flex h-full flex-col">
+            <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-4 font-semibold text-sidebar-foreground">
+                <span>HRIS Enterprise</span>
+                {sidebarToggle}
+            </div>
+            <div className="border-b border-sidebar-border p-3">
+            <div className="relative">
+            <Search className="absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+                placeholder="Filter menu..."
+                value={searchQuery}
+                onChange={(e) => dispatch(setSidebarSearchQuery(e.target.value))}
+                className="pl-8"
+            />
+            </div>
+        </div>
+        </div>
+    )
 }
