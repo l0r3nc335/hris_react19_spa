@@ -86,6 +86,7 @@ export function AppSidebar({
         <Button
           variant="ghost"
           size="icon"
+          className="hidden md:inline-flex"
           onClick={() => dispatch(toggleSidebar())}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
@@ -132,10 +133,24 @@ export function AppSidebar({
 
     return (
         <div className="flex h-full flex-col">
-            <div className="flex h-14 items-center justify-between border-b border-sidebar-border px-4 font-semibold text-sidebar-foreground">
-                <span>HRIS Enterprise</span>
+            <div
+                className={cn(
+                    'flex h-14 items-center gap-2 border-b border-sidebar-border px-2',
+                    collapsed ? 'justify-center' : 'justify-between px-4',
+                )}
+            >
+                <span
+                    className={cn(
+                    'overflow-hidden whitespace-nowrap font-semibold text-sidebar-foreground',
+                    'transition-[max-width,opacity] duration-300 ease-in-out',
+                    collapsed ? 'max-w-0 opacity-0' : 'max-w-[12rem] opacity-100',
+                    )}
+                >
+                    HRIS Enterprise
+                </span>
                 {sidebarToggle}
             </div>
+            
             <div className="border-b border-sidebar-border p-3">
             <div className="relative">
             <Search className="absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

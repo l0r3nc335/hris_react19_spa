@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { LogOut, Menu, Moon, Search, Sun } from 'lucide-react'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { logout, selectUser } from '@/slices/authSlice'
-import { setCommandPaletteOpen, toggleSidebar } from '@/slices/uiSlice'
+import { setCommandPaletteOpen } from '@/slices/uiSlice'
 import { useTheme } from '@/hooks/useTheme'
 import { Button } from '@/ui'
 import { ROUTES } from '@/constants/routes'
@@ -15,7 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 //import { AppSidebar } from './AppSidebar'
 //import { NotificationBell } from './NotificationBell'
 //import { MessageInbox } from './MessageInbox'
@@ -23,6 +22,9 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 //import { AppBreadcrumbs } from './AppBreadcrumbs'
 //import { getRouteMeta } from '@/constants/routeMeta'
 import { useLocation } from 'react-router-dom'
+import { getRouteMeta } from '@/constants/routeMeta'
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
+import { AppSidebar } from './AppSidebar'
 
 export function AppHeader(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -30,7 +32,7 @@ export function AppHeader(): React.JSX.Element {
   const location = useLocation()
   const user = useAppSelector(selectUser)
   const { resolvedTheme, toggleTheme } = useTheme()
-  const meta = '' // getRouteMeta(location.pathname)
+  const meta =  getRouteMeta(location.pathname)
 
   const handleLogout = (): void => {
     void dispatch(logout()).then((result) => {
@@ -47,7 +49,7 @@ export function AppHeader(): React.JSX.Element {
   return (
     <>
       <header className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4">
-        <div className="flex min-w-0 flex-1 items-center gap-2">
+        <div className="flex min-w-0 flex-1 items-center gap-2">          
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -55,21 +57,9 @@ export function AppHeader(): React.JSX.Element {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
-              {/*<AppSidebar />*/}
+              <AppSidebar />
             </SheetContent>
           </Sheet>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hidden md:inline-flex"
-            onClick={() => dispatch(toggleSidebar())}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <div className="hidden min-w-0 flex-col md:flex">
-            <span className="truncate text-sm font-medium">{meta.title}</span>
-            {/*<AppBreadcrumbs />*/}
-          </div>
         </div>
         <div className="flex items-center gap-1">
           <Button
