@@ -54,3 +54,14 @@ export const ROUTES = {
    }*/
 
 } as const
+
+const KNOWN_ROUTE_PATHS = new Set<string>(
+  Object.values(ROUTES).flatMap((group) => Object.values(group)),
+)
+
+export function isKnownRoute(pathname: string): boolean {
+  const normalized = pathname.length > 1 && pathname.endsWith('/')
+    ? pathname.slice(0, -1)
+    : pathname
+  return KNOWN_ROUTE_PATHS.has(normalized)
+}

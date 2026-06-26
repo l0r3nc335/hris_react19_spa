@@ -16,13 +16,12 @@ export function DashboardLayout(): React.JSX.Element {
           sidebarOpen ? 'md:w-64' : 'md:w-14',
         )}
       >
-        {/*<AppSidebar collapsed={!sidebarOpen} />*/}
         <AppSidebar collapsed={!sidebarOpen}/>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <AppHeader />
         <main className="flex flex-1 flex-col overflow-auto p-6">
-          {/*<Outlet />*/}
+          <Outlet />
         </main>
         {/*<AppFooter />*/}
       </div>

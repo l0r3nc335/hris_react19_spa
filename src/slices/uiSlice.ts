@@ -1,5 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { DEFAULT_EXPANDED_NAV_GROUPS } from '@/constants/navigation'
+import type { RootState } from '@/store'
+import { readLastKnownRoute } from '@/utils/lastKnownRoute'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -11,6 +13,7 @@ export interface UiState {
   notificationsOpen: boolean
   commandPaletteOpen: boolean
   sidebarSearchQuery: string
+  lastKnownRoute: string | null
 }
 
 const initialState: UiState = {
@@ -21,6 +24,7 @@ const initialState: UiState = {
   notificationsOpen: false,
   commandPaletteOpen: false,
   sidebarSearchQuery: '',
+  lastKnownRoute: readLastKnownRoute(),
 }
 
 const uiSlice = createSlice({
@@ -60,6 +64,9 @@ const uiSlice = createSlice({
     setSidebarSearchQuery(state, action: PayloadAction<string>) {
       state.sidebarSearchQuery = action.payload
     },
+    setLastKnownRoute(state, action: PayloadAction<string>) {
+      state.lastKnownRoute = action.payload
+    },
   },
 })
 
@@ -73,5 +80,7 @@ export const {
   setNotificationsOpen,
   setCommandPaletteOpen,
   setSidebarSearchQuery,
+  setLastKnownRoute,
 } = uiSlice.actions
 export const uiReducer = uiSlice.reducer
+export const selectLastKnownRoute = (state: RootState): string | null => state.ui.lastKnownRoute

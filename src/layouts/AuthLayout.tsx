@@ -1,4 +1,4 @@
-import PublicNavbar from '@/components/layout/PublicNavbar'
+import {PublicNavbar} from '@/components/layout/PublicNavbar'
 import { ROUTES } from '@/constants/routes'
 import { useAppSelector } from '@/hooks'
 import { selectAuthStatus, selectIsAuthenticated } from '@/slices/authSlice'

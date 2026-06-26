@@ -1,4 +1,4 @@
-import { PUBLIC_NAV } from "@/constants/publicnavigations"
+import { PUBLIC_NAV } from "@/constants/publicNavigations"
 import { Button, buttonVariants } from '@/ui'
 import { Link, NavLink } from "react-router-dom"
 import { cn } from "@/lib/utils"
@@ -40,7 +40,7 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }): React.JSX
     )
 }
 
-export default function PublicNavbar(): React.JSX.Element 
+export function PublicNavbar(): React.JSX.Element 
 {
     return (
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-card px-4 md:px-6">

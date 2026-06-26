@@ -25,3 +25,8 @@ export const ForgotPasswordPage = lazy(() =>
 export const Dashboard = lazy (() =>
     import('@/modules/dashboard/pages/DashboardPage').then((m) => ({default: m.DashboardPage}))
 )
+
+
+export const NotFoundPage = lazy(() => 
+    import('@/components/NotFoundPage').then((m) => ({default: m.NotFoundPage}))
+)

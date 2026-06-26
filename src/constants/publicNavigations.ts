@@ -1,5 +1,10 @@
 import { ROUTES } from '@/constants/routes'
 
+export interface PublicNavItem {
+    label: string
+    path: string
+}
+
 export const PUBLIC_NAV = [
     {label: 'About', path: ROUTES.public.about},
     {label: 'Pricing', path: ROUTES.public.pricing},
