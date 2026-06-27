@@ -1,13 +1,14 @@
 import { NAV_GROUPS, type NavItem } from "@/constants/navigation"
 import { useAppDispatch, useAppSelector } from "@/hooks"
 import { usePermission } from "@/hooks/usePermission"
-import { setSidebarSearchQuery, toggleSidebar } from "@/slices/uiSlice"
+import { setSidebarSearchQuery, toggleNavGroup, toggleSidebar } from "@/slices/uiSlice"
 import { Button, Input, Tooltip } from "@/ui"
-import { PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
+import { ChevronDown, PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area"
 import { NavLink } from "react-router-dom"
 import { ROUTES } from "@/constants/routes"
 import { cn } from "@/lib/utils"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
 
 interface AppSidebarProps {
     onNavigate?: () => void,
@@ -152,16 +153,51 @@ export function AppSidebar({
             </div>
             
             <div className="border-b border-sidebar-border p-3">
-            <div className="relative">
-            <Search className="absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-                placeholder="Filter menu..."
-                value={searchQuery}
-                onChange={(e) => dispatch(setSidebarSearchQuery(e.target.value))}
-                className="pl-8"
-            />
-            </div>
-        </div>
+              <div className="relative">
+                <Search className="absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                    placeholder="Filter menu..."
+                    value={searchQuery}
+                    onChange={(e) => dispatch(setSidebarSearchQuery(e.target.value))}
+                    className="pl-8"
+                />
+             </div>
+          </div>
+
+          <ScrollArea className="flex-1">
+            <nav className="space-y-1 p-2">
+              {filteredGroups.map((group) => {
+                const isExpanded = expandedGroups.includes(group.id)
+                return (
+                  <Collapsible
+                    key={group.id}
+                    open={isExpanded}
+                    onOpenChange={() => dispatch(toggleNavGroup(group.id))}
+                  >
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase hover:bg-accent/50">
+                      {group.label}
+                      <ChevronDown
+                        className={cn(
+                          'h-3.5 w-3.5 transition-transform',
+                          isExpanded && 'rotate-180',
+                        )}
+                      />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-0.5 pt-1 pb-2">
+                      {group.items.map((item) => (
+                        <SidebarNavItem
+                          key={item.path}
+                          item={item}
+                          collapsed={false}
+                          onNavigate={onNavigate}
+                        />
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                )
+              })}
+            </nav>
+          </ScrollArea>
         </div>
     )
 }

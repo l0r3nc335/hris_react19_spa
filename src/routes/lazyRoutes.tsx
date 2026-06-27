@@ -26,6 +26,9 @@ export const Dashboard = lazy (() =>
     import('@/modules/dashboard/pages/DashboardPage').then((m) => ({default: m.DashboardPage}))
 )
 
+export const UsersListPage = lazy(() => 
+    import('@/modules/users/pages/ListPage').then((m) => ({default: m.UsersListPage}))
+)
 
 export const NotFoundPage = lazy(() => 
     import('@/components/NotFoundPage').then((m) => ({default: m.NotFoundPage}))

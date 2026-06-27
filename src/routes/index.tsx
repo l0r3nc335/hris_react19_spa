@@ -49,6 +49,7 @@ export const router = createBrowserRouter([
                         element: <DashboardLayout />,
                         children: [
                             { path: 'dashboard', element: <SuspenseWrap> <Lazy.Dashboard /> </SuspenseWrap>},
+                            { path: 'users', element: <SuspenseWrap> <Lazy.UsersListPage /> </SuspenseWrap>},
                             { path: '*', element: <SuspenseWrap><Lazy.NotFoundPage /></SuspenseWrap> },
                             //{ path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
                         ]
