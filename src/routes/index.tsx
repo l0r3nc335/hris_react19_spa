@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
                         children: [
                             { path: 'dashboard', element: <SuspenseWrap> <Lazy.Dashboard /> </SuspenseWrap>},
                             { path: '*', element: <SuspenseWrap><Lazy.NotFoundPage /></SuspenseWrap> },
-                            //{ path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
+                            { path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
                         ]
                     },
                 ]

@@ -5,6 +5,6 @@ export function DashboardPage(): React.JSX.Element {
   //const { data: dashboard, isLoading } = useAnalyticsDashboard()
 
   return (
-    <></>
+    <>DASHBOARD</>
   )
 }
