@@ -6,8 +6,6 @@ const lifecycle = (base: string) => ({
   restore: (entityId: string) => `${base}/${entityId}/restore`,
 })
 
-// ENV - DEV ONLY
-//VITE_DEV_PROXY_TARGET=http://localhost:3000
 export const endpoints = {
   auth: {
     login: '/auth/login',
@@ -27,6 +25,7 @@ export const endpoints = {
     byId: id('/users'),
     profile: (userId: string) => `/users/${userId}/profile`,
     search: '/users/search',
+    searchTrashed: '/users/trashed/search',
     active: '/users/active',
     inactive: '/users/inactive',
     deactivate: (userId: string) => `/users/${userId}/deactivate`,
@@ -39,6 +38,8 @@ export const endpoints = {
     employmentHistory: (employeeId: string) => `/employees/${employeeId}/employment-history`,
     promote: (employeeId: string) => `/employees/${employeeId}/promote`,
     transfer: (employeeId: string) => `/employees/${employeeId}/transfer`,
+    search: '/employees/search',
+    searchTrashed: '/employees/trashed/search',
     byDepartment: (departmentId: string) => `/employees/by-department/${departmentId}`,
     byManager: (managerId: string) => `/employees/by-manager/${managerId}`,
     active: '/employees/active',

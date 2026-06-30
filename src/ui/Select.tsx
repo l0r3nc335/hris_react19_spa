@@ -12,6 +12,7 @@ import {
   }
   
   export interface SelectProps {
+    id?: string
     value?: string
     onValueChange?: (value: string) => void
     placeholder?: string
@@ -19,6 +20,7 @@ import {
   }
   
   export function Select({
+    id,
     value,
     onValueChange,
     placeholder,
@@ -26,7 +28,7 @@ import {
   }: SelectProps): React.JSX.Element {
     return (
       <SelectRoot value={value} onValueChange={onValueChange}>
-        <SelectTrigger>
+        <SelectTrigger id={id} className="w-full">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
