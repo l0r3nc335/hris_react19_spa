@@ -1,11 +1,11 @@
-import { NAV_GROUPS, type NavItem } from "@/constants/navigation"
+import { NAV_GROUPS, navGroupContainsPath, type NavItem } from '@/constants/navigation'
 import { useAppDispatch, useAppSelector } from "@/hooks"
 import { usePermission } from "@/hooks/usePermission"
 import { setSidebarSearchQuery, toggleSidebar, toggleNavGroup } from "@/slices/uiSlice"
 import { Button, Input, Tooltip } from "@/ui"
 import { Group, PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area"
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from "@/constants/routes"
 import { cn } from "@/lib/utils"
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible"
@@ -64,6 +64,7 @@ export function AppSidebar({
     collapsed = false
 }: AppSidebarProps): React.JSX.Element 
 {
+    const { pathname } = useLocation()
     const dispatch = useAppDispatch()
     const expandedGroups = useAppSelector((s) => s.ui.expandedNavGroups)
     const searchQuery = useAppSelector((s) => s.ui.sidebarSearchQuery)
@@ -177,14 +178,20 @@ export function AppSidebar({
 
               {/* Filtered nav Groups */}
               { filteredGroups.map((group) => {
-                const isExpanded = expandedGroups.includes(group.id)
+                const isRouteActive = navGroupContainsPath(group, pathname)
+                const isManuallyExpanded = expandedGroups.includes(group.id)
+                const isExpanded = normalizedQuery.length > 0 || isRouteActive || isManuallyExpanded
                 
                 {/* Collapsible Nav Group */}
                 return (
                   <Collapsible 
                     key={group.id}
                     open={isExpanded}
-                    onOpenChange={() => dispatch(toggleNavGroup(group.id))}
+                    onOpenChange={(open) => {
+                      if (open !== isManuallyExpanded) {
+                        dispatch(toggleNavGroup(group.id))
+                      }
+                    }}
                   >
                     <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold tracking-wide text-muted-forreground uppercase hover:bg-accent/50">
                       {group.label}

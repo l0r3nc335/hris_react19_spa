@@ -13,7 +13,6 @@
     1. Gets users data from the the backend upon loading the page. 
     2. search table in FE side, using the search bar provided.
 
-
 ## Add search records
     1. Search records gets records from the backend using the given parameters.
 
@@ -24,3 +23,4 @@
     Edit - Opens modal
     Delete - soft delete with confirmation
     Permanent Delete - this action is for soft deleted only.
+------------------------------------------------------------------------

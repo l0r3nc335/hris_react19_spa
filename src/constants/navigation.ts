@@ -135,4 +135,15 @@ export const NAV_GROUPS: NavGroup[] = [
 /** Flat list for global search and backwards compatibility */
 export const MAIN_NAV: NavItem[] = NAV_GROUPS.flatMap((group) => group.items)
 
-export const DEFAULT_EXPANDED_NAV_GROUPS = NAV_GROUPS.map((g) => g.id)
+export const DEFAULT_EXPANDED_NAV_GROUPS: string[] = []
+
+export function navItemMatchesPath(itemPath: string, pathname: string): boolean {
+  if (itemPath === ROUTES.dashboard.dashboard) {
+    return pathname === itemPath
+  }
+  return pathname === itemPath || pathname.startsWith(`${itemPath}/`)
+}
+
+export function navGroupContainsPath(group: NavGroup, pathname: string): boolean {
+  return group.items.some((item) => navItemMatchesPath(item.path, pathname))
+}
