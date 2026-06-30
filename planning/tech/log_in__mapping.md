@@ -25,7 +25,7 @@ login page
                 -> authApi.login
                     -> httpClient.post
 ```ts 
-                            const res.data.data = await httpClient.post<ApiResponse<LoginResult>>(endpoints.auth.login, payload)
+                const res.data.data = await httpClient.post<ApiResponse<LoginResult>>(endpoints.auth.login, payload)
 ```
 ----------------------------------------------------------------
 

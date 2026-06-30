@@ -1,13 +1,14 @@
 import { NAV_GROUPS, type NavItem } from "@/constants/navigation"
 import { useAppDispatch, useAppSelector } from "@/hooks"
 import { usePermission } from "@/hooks/usePermission"
-import { setSidebarSearchQuery, toggleSidebar } from "@/slices/uiSlice"
+import { setSidebarSearchQuery, toggleSidebar, toggleNavGroup } from "@/slices/uiSlice"
 import { Button, Input, Tooltip } from "@/ui"
-import { PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
+import { Group, PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area"
 import { NavLink } from "react-router-dom"
 import { ROUTES } from "@/constants/routes"
 import { cn } from "@/lib/utils"
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible"
 
 interface AppSidebarProps {
     onNavigate?: () => void,
@@ -67,9 +68,9 @@ export function AppSidebar({
     const expandedGroups = useAppSelector((s) => s.ui.expandedNavGroups)
     const searchQuery = useAppSelector((s) => s.ui.sidebarSearchQuery)
     const { can } = usePermission()
-
     const normalizedQuery = searchQuery.trim().toLowerCase()
 
+    /* NAVIGATION GROUPS - check permisions and filter menu*/
     const filteredGroups = NAV_GROUPS.map((group) => ({
         ...group,
         items: group.items.filter((item) => {
@@ -79,9 +80,9 @@ export function AppSidebar({
           return item.label.toLowerCase().includes(normalizedQuery)
         }),
     })).filter((group) => group.items.length > 0)
+    const navGroupflatItems = filteredGroups.flatMap((group) => group.items)
 
-    const flatItems = filteredGroups.flatMap((group) => group.items)
-
+    // SIDEBAR - OPEN/CLOSE BUTTON (COLLAPSE)
     const sidebarToggle = (
         <Button
           variant="ghost"
@@ -98,6 +99,7 @@ export function AppSidebar({
         </Button>
     )
 
+    /* SIDEBAR - COLLAPSED (CLOSED) */
     if (collapsed) {
         return (
           <div className="flex h-full flex-col">
@@ -106,7 +108,7 @@ export function AppSidebar({
             </div>
             <ScrollArea className="flex-1">
               <nav className="space-y-1 p-2">
-                {flatItems.map((item) => (
+                {navGroupflatItems.map((item) => (
                   <SidebarNavItem
                     key={item.path}
                     item={item}
@@ -131,37 +133,80 @@ export function AppSidebar({
         )
     }
 
+    /* SETTINGS LINK HERE */
+
     return (
-        <div className="flex h-full flex-col">
-            <div
-                className={cn(
-                    'flex h-14 items-center gap-2 border-b border-sidebar-border px-2',
-                    collapsed ? 'justify-center' : 'justify-between px-4',
-                )}
-            >
-                <span
-                    className={cn(
-                    'overflow-hidden whitespace-nowrap font-semibold text-sidebar-foreground',
-                    'transition-[max-width,opacity] duration-300 ease-in-out',
-                    collapsed ? 'max-w-0 opacity-0' : 'max-w-[12rem] opacity-100',
-                    )}
-                >
-                    HRIS Enterprise
-                </span>
-                {sidebarToggle}
-            </div>
-            
-            <div className="border-b border-sidebar-border p-3">
-            <div className="relative">
-            <Search className="absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      <div className="flex h-full flex-col">
+        {/* SIDE BAR HEADER */}
+        <div
+            className={cn(
+                'flex h-14 items-center gap-2 border-b border-sidebar-border px-2',
+                collapsed ? 'justify-center' : 'justify-between px-4',
+            )}
+        >
+          <span
+              className={cn(
+              'overflow-hidden whitespace-nowrap font-semibold text-sidebar-foreground',
+              'transition-[max-width,opacity] duration-300 ease-in-out',
+              collapsed ? 'max-w-0 opacity-0' : 'max-w-[12rem] opacity-100',
+              )}
+          >
+              HRIS Enterprise
+          </span>
+          {sidebarToggle}
+        </div>
+
+        {/* FILTER MENU */}    
+        <div className="border-b border-sidebar-border p-3">
+          <div className="relative">
+            {/* Search Icon */}
+            <Search className="absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" /> 
+            {/* Search input */}
             <Input
                 placeholder="Filter menu..."
                 value={searchQuery}
                 onChange={(e) => dispatch(setSidebarSearchQuery(e.target.value))}
                 className="pl-8"
             />
-            </div>
+          </div>
         </div>
-        </div>
+      
+        {/* SCROLLED NAVIGATION */}      
+        <ScrollArea className="flex-1">
+          <nav className="space-y-1 p-2 h-5">
+
+              {/* Filtered nav Groups */}
+              { filteredGroups.map((group) => {
+                const isExpanded = expandedGroups.includes(group.id)
+                
+                {/* Collapsible Nav Group */}
+                return (
+                  <Collapsible 
+                    key={group.id}
+                    open={isExpanded}
+                    onOpenChange={() => dispatch(toggleNavGroup(group.id))}
+                  >
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold tracking-wide text-muted-forreground uppercase hover:bg-accent/50">
+                      {group.label}
+                    </CollapsibleTrigger>
+
+                    {/* Nav Items */}
+                    <CollapsibleContent>
+                      {group.items.map((item)=>(
+                        <SidebarNavItem
+                          key={item.path}
+                          item={item}
+                          collapsed={false}
+                          onNavigate={onNavigate}
+                        >
+                        </SidebarNavItem>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                )
+              })}
+          </nav>
+        </ScrollArea>
+      </div>
     )
 }
