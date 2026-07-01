@@ -5,17 +5,18 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent } from '@/components/ui/card'
 import { PublicPageShell } from '@/modules/public/pages/PublicPageShell'
 import { ROUTES } from '@/constants/routes'
+import { Button } from '@/components/ui/button'
 
 type VerifyState = 'waiting' | 'verifying' | 'success' | 'error'
 
 export function VerifyEmailPage(): React.JSX.Element {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [searchParams] = useSearchParams()
-  const token = searchParams.get('token') ?? ''
-  const emailFromState = (location.state as { email?: string } | null)?.email
-  const [state, setState] = useState<VerifyState>(token ? 'verifying' : 'waiting')
-  const [error, setError] = useState<string | null>(null)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const [searchParams] = useSearchParams()
+    const token = searchParams.get('token') ?? ''
+    const emailFromState = (location.state as { email?: string } | null)?.email
+    const [state, setState] = useState<VerifyState>(token ? 'verifying' : 'waiting')
+    const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!token) return
@@ -30,8 +31,8 @@ export function VerifyEmailPage(): React.JSX.Element {
         if (cancelled) return
         setState('success')
         timer = window.setTimeout(() => {
-          navigate(ROUTES.auth.login, { replace: true })
-        }, 3000)
+          //navigate(ROUTES.auth.login, { replace: true })
+        }, 30000)
       })
       .catch(() => {
         if (cancelled) return
@@ -77,33 +78,42 @@ export function VerifyEmailPage(): React.JSX.Element {
     state === 'success'
       ? 'Your email has been verified. Redirecting to login...'
       : state === 'error'
-        ? 'We could not verify your email address.'
+        ? error
         : 'Please wait while we verify your email address.'
 
   return (
     <PublicPageShell title={title} description={description}>
       <Card className="mx-auto max-w-md">
-        <CardContent className="pt-6">
+        <CardContent className="pt-0">
           {state === 'verifying' ? (
             <p className="text-center text-sm text-muted-foreground">Verifying...</p>
           ) : null}
           {state === 'success' ? (
-            <Alert>
-              <AlertDescription>Email verified successfully.</AlertDescription>
-            </Alert>
+            <div className="flex justify-center">
+                <Button 
+                    type="button" 
+                    className=""
+                    onClick={()=> {navigate(ROUTES.auth.login)}}
+                >
+                    Go to login page.
+                </Button>
+            </div>
           ) : null}
           {state === 'error' && error ? (
-            <Alert variant="destructive">
+            <Alert className="text-center" variant="destructive">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           ) : null}
           {state === 'error' ? (
-            <Link
-              to={ROUTES.auth.login}
-              className="mt-4 inline-block text-sm text-primary hover:underline"
-            >
-              Back to login
-            </Link>
+            <div className="flex justify-center">
+                <Button 
+                    type="button" 
+                    className="mt-5"
+                    onClick={()=> {navigate(ROUTES.auth.login)}}
+                >
+                    Go to login page.
+                </Button>
+            </div>
           ) : null}
         </CardContent>
       </Card>
