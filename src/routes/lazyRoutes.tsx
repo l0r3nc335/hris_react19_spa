@@ -13,6 +13,7 @@ export const PricingPage = lazy(() =>
 export const ContactPage = lazy(() =>
     import('@/modules/public/pages/ContactPage').then((m) => ({ default: m.ContactPage })),
 )
+//--------------------------------------------------------------------------------------------------------
 
 export const LoginPage = lazy(() =>
     import('@/modules/auth/pages/LoginPage').then((m) => ({default: m.LoginPage}))
@@ -21,6 +22,17 @@ export const LoginPage = lazy(() =>
 export const ForgotPasswordPage = lazy(() =>
     import('@/modules/auth/pages/ForgotPasswordPage').then((m) => ({default: m.ForgotPasswordPage}))
 )
+
+export const RegisterPage = lazy(() =>
+    import('@/modules/auth/pages/RegisterPage').then((m) => ({default: m.RegisterPage}))
+)
+
+export const VerifyEmailPage = lazy(() =>
+    import('@/modules/auth/pages/VerifyEmailPage').then((m) => ({default: m.VerifyEmailPage}))
+)
+
+
+//--------------------------------------------------------------------------------------------------------
 
 export const Dashboard = lazy (() =>
     import('@/modules/dashboard/pages/DashboardPage').then((m) => ({default: m.DashboardPage}))

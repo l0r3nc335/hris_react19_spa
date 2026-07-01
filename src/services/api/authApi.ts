@@ -44,6 +44,11 @@ export async function register(payload: {
   return res.data.data
 }
 
+export async function verifyEmail(payload: { token: string }): Promise<void> {
+  await ensureCsrfReady()
+  await httpClient.post(endpoints.auth.verifyEmail, payload)
+}
+
 export async function forgotPassword(email: string): Promise<void> {
   await ensureCsrfReady()
   await httpClient.post(endpoints.auth.forgotPassword, { email })

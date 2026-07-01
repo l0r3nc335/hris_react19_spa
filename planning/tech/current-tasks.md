@@ -54,5 +54,25 @@ B. EntityFormDialog
     
     D. /src/modules/<users>/listColumns.tsx
 
+-----------------------------------------------------------------------
+
+# Fix Registration workflow
+
+Register
+    ↓
+Verify Email
+    ↓
+Select Plan
+    ↓
+Enter Credit Card
+    ↓
+Start Trial
+    ↓
+Setup Workspace
+
+
+1. Register - redirect to a page telling to please check your email and verify your account: lorenzo.garcia.tlc@gmail.com [OK]
+
+    
 
 
