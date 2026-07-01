@@ -31,8 +31,8 @@ export function VerifyEmailPage(): React.JSX.Element {
         if (cancelled) return
         setState('success')
         timer = window.setTimeout(() => {
-          //navigate(ROUTES.auth.login, { replace: true })
-        }, 30000)
+          navigate(ROUTES.auth.login, { replace: true })
+        }, 20000)
       })
       .catch(() => {
         if (cancelled) return
