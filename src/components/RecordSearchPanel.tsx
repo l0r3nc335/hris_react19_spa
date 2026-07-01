@@ -103,15 +103,17 @@ export function RecordSearchPanel({
 }: RecordSearchPanelProps): React.JSX.Element {
   return (
     <Collapsible defaultOpen={false}>
-      <Card>
-        <CardHeader className="py-3">
-          <CollapsibleTrigger className="flex w-full items-center justify-between text-left font-medium">
+      
+      <Card className="pt-0 pb-0">
+        <CardHeader className="py-3 mb-0 border-b-1 border-gray-700">
+          <CollapsibleTrigger className="flex w-full items-center justify-between text-left font-medium text-base">
             Search records
             <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 [[data-state=open]_&]:rotate-180" />
           </CollapsibleTrigger>
         </CardHeader>
+
         <CollapsibleContent>
-          <CardContent className="space-y-4 pt-0">
+          <CardContent className="space-y-4 pt-0 pb-5">
             <form
               className="space-y-4"
               onSubmit={(event) => {
@@ -119,7 +121,7 @@ export function RecordSearchPanel({
                 onSearch()
               }}
             >
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-6">
               {fields.map((field) => (
                 <SearchField
                   key={field.type === 'date-range' ? field.key : field.key}

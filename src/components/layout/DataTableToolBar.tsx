@@ -24,7 +24,7 @@ const STATUS_FILTER_OPTIONS = [
 export function DataTableToolbar({
   searchValue = '',
   onSearchChange,
-  searchPlaceholder = 'Search records...',
+  searchPlaceholder = 'Search table...',
   showDeleted,
   onShowDeletedChange,
   statusFilter,
