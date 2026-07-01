@@ -8,6 +8,9 @@ import * as Lazy from '@/routes/lazyRoutes'
 import { PageLoader } from "@/components/PageLoader"
 import { ROUTES } from "@/constants/routes"
 import { RootLayout } from '@/layouts/RootLayout'
+import { lazyRouteElement } from '@/routes/lazyRouteElement'
+import { ROUTE_SEGMENT_PERMISSIONS } from '@/constants/routePermissions'
+
 interface SuspenseWrapProps {
     children: ReactNode
 }
@@ -15,6 +18,16 @@ interface SuspenseWrapProps {
 function SuspenseWrap({children}: SuspenseWrapProps): React.JSX.Element
 {
     return<Suspense fallback={<PageLoader />}>{children}</Suspense>
+}
+
+function dashboardRoute(
+    path: string,
+    page: Parameters<typeof lazyRouteElement>[0],
+): { path: string; element: ReactNode } {
+    return {
+      path,
+      element: lazyRouteElement(page, ROUTE_SEGMENT_PERMISSIONS[path]),
+    }
 }
 
 export const router = createBrowserRouter([
@@ -51,9 +64,10 @@ export const router = createBrowserRouter([
                     {
                         element: <DashboardLayout />,
                         children: [
-                            { path: 'dashboard', element: <SuspenseWrap> <Lazy.Dashboard /> </SuspenseWrap>},
+                            { path: 'dashboard', element: lazyRouteElement(Lazy.DashboardPage)},
                             { path: '*', element: <SuspenseWrap><Lazy.NotFoundPage /></SuspenseWrap> },
-                            { path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
+                            dashboardRoute('users', Lazy.UsersListPage)
+                            //{ path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
                         ]
                     },
                 ]

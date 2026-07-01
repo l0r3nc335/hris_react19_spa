@@ -34,7 +34,7 @@ export const VerifyEmailPage = lazy(() =>
 
 //--------------------------------------------------------------------------------------------------------
 
-export const Dashboard = lazy (() =>
+export const DashboardPage = lazy (() =>
     import('@/modules/dashboard/pages/DashboardPage').then((m) => ({default: m.DashboardPage}))
 )
 

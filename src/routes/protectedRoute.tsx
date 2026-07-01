@@ -5,6 +5,9 @@ import { usePermission } from '@/hooks/usePermission'
 import type { Permission } from '@/constants/permissions'
 import { isKnownRoute, ROUTES } from '@/constants/routes'
 import { PublicNotFoundShell } from '@/layouts/PublicNotFoundShell'
+import { Suspense } from 'react'
+import { PageLoader } from '@/components/PageLoader'
+import { NotFoundPage } from '@/routes/lazyRoutes'
 
 export interface ProtectedRouteProps {
   permissions?: Permission[]
@@ -26,7 +29,11 @@ export function ProtectedRoute({
     return <PublicNotFoundShell />
   }
   if (permissions?.length && !permissions.some((p) => can(p))) {
-    return <Navigate to={ROUTES.dashboard.dashboard} replace />
+    return (
+      <Suspense fallback={<PageLoader />}>
+        <NotFoundPage />
+      </Suspense>
+    )
   }
   return <Outlet />
 }

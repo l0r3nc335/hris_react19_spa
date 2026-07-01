@@ -10,19 +10,19 @@
 # Users Page
 
 ## Add users table
-    1. Gets users data from the the backend upon loading the page.  [OK] 
-    2. search table in FE side, using the search bar provided.  [OK]
+    1. Gets users data from the the backend upon loading the page. - [OK] 
+    2. search table in FE side, using the search bar provided. - [OK]
 
 ## Add search records
-    1. Search records gets records from the backend using the given parameters.  [OK]
+    1. Search records gets records from the backend using the given parameters. - [OK]
 
 ## Table actions
-    1. Table actions per records  [OK]
-    2. Table button - add records  [OK]
+    1. Table actions per records - [OK]
+    2. Table button - add records - [OK]
 
-    Edit - Opens modal  [OK]
-    Delete - soft delete with confirmation  [OK]
-    Permanent Delete - this action is for soft deleted only.  [OK]
+    Edit - Opens modal - [OK]
+    Delete - soft delete with confirmation - [OK]
+    Permanent Delete - this action is for soft deleted only.  - [OK]
 ------------------------------------------------------------------------
 
 # Refine Entity List Page
@@ -71,8 +71,12 @@ Start Trial
 Setup Workspace
 
 
-1. Register - redirect to a page telling to please check your email and verify your account: lorenzo.garcia.tlc@gmail.com [OK]
+    1. Register - redirect to a page telling to please check your email and verify your account: lorenzo.garcia.tlc@gmail.com  - [OK]
 
-    
+
+    2. emailverification page should be longer with button to redirect.  - [OK]
+    3. add x button to the toast
+    4. if session in page is not found andtoas error,redirectto login 
+    5. if users is accessing auth route, an no atuhorization redirect to 404  - [OK]
 
 
