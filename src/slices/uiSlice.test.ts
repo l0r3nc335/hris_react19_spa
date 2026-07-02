@@ -3,7 +3,6 @@ import {
   setCommandPaletteOpen,
   setExpandedNavGroups,
   setGlobalLoading,
-  setLastKnownRoute,
   setNotificationsOpen,
   setSidebarOpen,
   setSidebarSearchQuery,
@@ -12,8 +11,6 @@ import {
   toggleSidebar,
   uiReducer,
 } from '@/slices/uiSlice'
-import { ROUTES } from '@/constants/routes'
-
 const getInitialState = () => uiReducer(undefined, { type: '@@INIT' })
 
 describe('uiSlice', () => {
@@ -63,10 +60,5 @@ describe('uiSlice', () => {
   it('sets sidebar search query', () => {
     const next = uiReducer(getInitialState(), setSidebarSearchQuery('users'))
     expect(next.sidebarSearchQuery).toBe('users')
-  })
-
-  it('sets last known route', () => {
-    const next = uiReducer(getInitialState(), setLastKnownRoute(ROUTES.public.about))
-    expect(next.lastKnownRoute).toBe(ROUTES.public.about)
   })
 })

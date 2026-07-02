@@ -29,7 +29,7 @@ export function AppProviders({ store, children }: AppProvidersProps): React.JSX.
     <Provider store={store}>
       <CoreProviders>
         <AuthGate>{children}</AuthGate>
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="top-right" closeButton/>
       </CoreProviders>
     </Provider>
   )

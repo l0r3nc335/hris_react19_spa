@@ -76,7 +76,7 @@ export function VerifyEmailPage(): React.JSX.Element {
 
   const description =
     state === 'success'
-      ? 'Your email has been verified. Redirecting to login...'
+      ? 'Your email address has been verified. Redirecting to login...'
       : state === 'error'
         ? error
         : 'Please wait while we verify your email address.'

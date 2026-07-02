@@ -10,7 +10,6 @@ describe('NotFoundPage', () => {
     renderWithProviders(<NotFoundPage />, {
       preloadedState: mockRootState({
         auth: { isAuthenticated: true, status: 'succeeded' },
-        ui: { lastKnownRoute: null },
       }),
       initialEntries: ['/dashboard/missing'],
       routePath: '/dashboard/missing',
@@ -29,19 +28,5 @@ describe('NotFoundPage', () => {
 
     const link = screen.getByRole('link', { name: /go back/i })
     expect(link).toHaveAttribute('href', ROUTES.public.landing)
-  })
-
-  it('prefers last known route when available', () => {
-    renderWithProviders(<NotFoundPage />, {
-      preloadedState: mockRootState({
-        auth: { isAuthenticated: true, status: 'succeeded' },
-        ui: { lastKnownRoute: ROUTES.public.pricing },
-      }),
-      initialEntries: ['/dashboard/missing'],
-      routePath: '/dashboard/missing',
-    })
-
-    const link = screen.getByRole('link', { name: /go back/i })
-    expect(link).toHaveAttribute('href', ROUTES.public.pricing)
   })
 })

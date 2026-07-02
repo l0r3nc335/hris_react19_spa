@@ -3,16 +3,24 @@ import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/ui'
 import { useAppSelector } from '@/hooks'
 import { selectIsAuthenticated } from '@/slices/authSlice'
-import { selectLastKnownRoute } from '@/slices/uiSlice'
 import { cn } from '@/lib/utils'
-import { resolveNotFoundBackTarget } from '@/utils/lastKnownRoute'
+import { ROUTES } from '@/constants/routes'
+
+function resolveNotFoundBackTarget(pathname: string, isAuthenticated: boolean): string {
+  if (pathname.startsWith('/auth')) {
+    return ROUTES.auth.login
+  }
+  if (isAuthenticated) {
+    return ROUTES.dashboard.dashboard
+  }
+  return ROUTES.public.landing
+}
 
 export function NotFoundPage(): React.JSX.Element {
   const { pathname } = useLocation()
   const isAuthenticated = useAppSelector(selectIsAuthenticated)
-  const lastKnownRoute = useAppSelector(selectLastKnownRoute)
+  const backTarget = resolveNotFoundBackTarget(pathname, isAuthenticated)
   const isDashboardContext = isAuthenticated && !pathname.startsWith('/auth')
-  const target = resolveNotFoundBackTarget(lastKnownRoute, pathname, isAuthenticated)
 
   return (
     <div
@@ -27,7 +35,7 @@ export function NotFoundPage(): React.JSX.Element {
         The page you are looking for does not exist or has been moved.
       </p>
       <Button className="mt-6" asChild>
-        <Link to={target}>
+        <Link to={backTarget}>
           <ArrowLeft />
           Go back
         </Link>

@@ -48,7 +48,6 @@ export const mockUiState = (overrides: Partial<UiState> = {}): UiState => ({
   notificationsOpen: false,
   commandPaletteOpen: false,
   sidebarSearchQuery: '',
-  lastKnownRoute: null,
   ...overrides,
 })
 

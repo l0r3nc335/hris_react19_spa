@@ -19,6 +19,7 @@ import {
 import { ROUTES } from '@/constants/routes'
 import { registerSchema, type RegisterFormData } from '../schemas'
 import { CardEdgeGlow } from '@/components/animations/CardEdgeGlow'
+import { normalizeApiError } from '@/services/errors'
 
 export function RegisterPage(): React.JSX.Element {
   const navigate = useNavigate()
@@ -41,8 +42,15 @@ export function RegisterPage(): React.JSX.Element {
             }
         })
       })
-      .catch(() => {
-        setError('Registration failed. Please try again.')
+      .catch((err) => {
+        form.reset()
+        const apiError = normalizeApiError(err)
+        if (apiError.details) {
+          const messages = Object.values(apiError.details).flat()
+          setError(messages.join(' '))
+          return
+        }
+        setError(apiError.message || 'Registration failed. Please try again.')
       })
       .finally(() => {
         setIsSubmitting(false)

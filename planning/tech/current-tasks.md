@@ -58,11 +58,11 @@ B. EntityFormDialog
 
 # Fix Registration workflow
 
-Register
+Register   - [OK]
     ↓
-Verify Email
+Verify Email   - [OK]
     ↓
-Select Plan
+Select Plan - []
     ↓
 Enter Credit Card
     ↓
@@ -72,11 +72,17 @@ Setup Workspace
 
 
     1. Register - redirect to a page telling to please check your email and verify your account: lorenzo.garcia.tlc@gmail.com  - [OK]
-
+    
 
     2. emailverification page should be longer with button to redirect.  - [OK]
-    3. add x button to the toast
-    4. if session in page is not found andtoas error,redirectto login 
+    3. add x button to the toast  - [OK]
+    4. if session in page is not found andtoas error, redirectto login 
     5. if users is accessing auth route, an no atuhorization redirect to 404  - [OK]
 
+    6. check if registration tenant Id is always unique
+
+
+# LOGIN MAJOR ISSUES
+
+    remove login validation in password: Too small: expected string to have >=6 characters 
 
