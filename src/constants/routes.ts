@@ -23,7 +23,15 @@ export const ROUTES = {
    people: {
       users: '/users',
    },
-   
+
+   platform: {
+      subscriptions: '/subscriptions',
+   },
+
+   subscription: {
+      plans: '/subscription/plans',
+   },
+
    system: {
       settings: '/settings',
    }, 

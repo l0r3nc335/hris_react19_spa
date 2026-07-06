@@ -18,6 +18,13 @@ export const PERMISSIONS = {
     settingsWrite: 'settings:write',
     reportsRead: 'reports:read',
     billingRead: 'billing:read',
+
+    //current be supported
+    subscriptionsRead: 'subscriptions:read',
+    subscriptionsWrite: 'subscriptions:write',
+    //forward  guidance vs  //curent pemissions from be
+    subscriptionPlansRead: 'my-subscription:read', //TODO: BE & FE change to subscription-plans:read
+
   } as const
   
   export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]

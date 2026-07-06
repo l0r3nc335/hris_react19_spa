@@ -20,6 +20,19 @@ export interface UserSearchCriteria {
   deletedAtTo?: string
 }
 
+export interface SubscriptionSearchCriteria {
+  page?: number
+  limit?: number
+  name?: string
+  label?: string
+  billingInterval?: string
+  isActive?: boolean
+  createdAtFrom?: string
+  createdAtTo?: string
+  deletedAtFrom?: string
+  deletedAtTo?: string
+}
+
 export interface EmployeeSearchCriteria {
   page?: number
   limit?: number

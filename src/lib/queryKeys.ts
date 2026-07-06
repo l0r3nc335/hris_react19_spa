@@ -4,6 +4,11 @@ export const queryKeys = {
       list: () => [...queryKeys.users.all, 'list'] as const,
       trashed: () => [...queryKeys.users.all, 'trashed'] as const,
     },
+    subscriptions: {
+      all: ['subscriptions'] as const,
+      list: () => [...queryKeys.subscriptions.all, 'list'] as const,
+      trashed: () => [...queryKeys.subscriptions.all, 'trashed'] as const,
+    },
     employees: {
       all: ['employees'] as const,
       list: () => [...queryKeys.employees.all, 'list'] as const,

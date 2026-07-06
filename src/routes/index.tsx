@@ -66,7 +66,9 @@ export const router = createBrowserRouter([
                         children: [
                             { path: 'dashboard', element: lazyRouteElement(Lazy.DashboardPage)},
                             { path: '*', element: <SuspenseWrap><Lazy.NotFoundPage /></SuspenseWrap> },
-                            dashboardRoute('users', Lazy.UsersListPage)
+                            dashboardRoute('users', Lazy.UsersListPage),
+                            dashboardRoute('subscriptions', Lazy.SubscriptionsListPage),
+                            dashboardRoute('subscription/plans', Lazy.SubscriptionPlansPage),
                             //{ path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
                         ]
                     },

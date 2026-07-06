@@ -14,6 +14,26 @@ export interface User extends BaseEntity {
   role: string
   permissions: string[]
   isActive: boolean
+  userSubscription?: UserSubscription | null
+}
+
+export interface UserSubscription {
+  id: string
+  subscriptionId: string
+  status: string
+  autoRenew?: boolean
+  dateStart?: string
+  dateEnd?: string
+  plan: {
+    slug: string
+    label: string
+    description?: string
+    price: string
+    currency: string
+    billingInterval: string
+    defaultUserCount?: number
+    priceAdditionalUsers?: string
+  }
 }
 
 export interface Tenant extends BaseEntity {

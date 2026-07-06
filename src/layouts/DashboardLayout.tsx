@@ -3,6 +3,7 @@ import { useAppSelector } from '@/hooks'
 import { cn } from '@/lib/utils'
 import { AppSidebar } from '@/components/layout/AppSidebar'
 import { AppHeader } from '@/components/layout/AppHeader'
+import { SubscriberOnboardingGuard } from '@/components/SubscriberOnboardingGuard'
 //import { AppFooter } from '@/components/layout/AppFooter'
 
 export function DashboardLayout(): React.JSX.Element {
@@ -21,7 +22,9 @@ export function DashboardLayout(): React.JSX.Element {
       <div className="flex min-w-0 flex-1 flex-col">
         <AppHeader />
         <main className="flex flex-1 flex-col overflow-auto p-6">
-          <Outlet />
+          <SubscriberOnboardingGuard >
+            <Outlet />
+          </SubscriberOnboardingGuard>
         </main>
         {/*<AppFooter />*/}
       </div>

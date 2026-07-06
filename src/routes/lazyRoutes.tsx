@@ -38,6 +38,14 @@ export const DashboardPage = lazy (() =>
     import('@/modules/dashboard/pages/DashboardPage').then((m) => ({default: m.DashboardPage}))
 )
 
+export const SubscriptionsListPage = lazy (() =>
+    import('@/modules/subscriptions/pages/SubscriptionsListPage').then((m) => ({default: m.SubscriptionsListPage}))
+)
+
+export const SubscriptionPlansPage = lazy (() =>
+    import('@/modules/subscriptions/pages/SubscriptionPlansPage').then((m) => ({default: m.SubscriptionPlansPage}))
+)
+
 export const UsersListPage = lazy (() =>
     import('@/modules/users/pages/UsersListPage').then((m) => ({default: m.UsersListPage}))
 )
@@ -45,3 +53,5 @@ export const UsersListPage = lazy (() =>
 export const NotFoundPage = lazy(() => 
     import('@/components/NotFoundPage').then((m) => ({default: m.NotFoundPage}))
 )
+
+//---------------------------------------------------------------------------------------------------------

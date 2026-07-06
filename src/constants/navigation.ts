@@ -2,6 +2,8 @@ import type { LucideIcon } from 'lucide-react'
 import {
   LayoutDashboard,
   Users,
+  Receipt,
+  Sparkles,
   /*
   BarChart3,
   UserCircle,
@@ -56,10 +58,34 @@ export const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    id: 'subscription',
+    label: 'Subscription',
+    items: [
+      {
+        label: 'Plans',
+        path: ROUTES.subscription.plans,
+        icon: Sparkles,
+        permission: PERMISSIONS.subscriptionPlansRead,
+      },
+    ]
+  },
+  {
     id: 'people',
     label: 'People & Organization',
     items: [
       { label: 'Users', path: ROUTES.people.users, icon: Users, permission: PERMISSIONS.usersRead },
+      //{ label: 'Employees', path: ROUTES.employees, icon: UserCircle, permission: PERMISSIONS.employeesRead },
+      //{ label: 'Employee Department', path: ROUTES.employeeDepartments, icon: GitBranch, permission: PERMISSIONS.employeeDepartmentsRead },
+      //{ label: 'Departments', path: ROUTES.departments, icon: Building2, permission: PERMISSIONS.departmentsRead },
+      //{ label: 'Positions', path: ROUTES.positions, icon: Briefcase },
+      //{ label: 'Org Chart', path: ROUTES.orgChart, icon: Network },
+    ],
+  },
+  {
+    id: 'platform',
+    label: 'Platform',
+    items: [
+      { label: 'Subscriptions', path: ROUTES.platform.subscriptions, icon: Receipt, permission: PERMISSIONS.usersRead },
       //{ label: 'Employees', path: ROUTES.employees, icon: UserCircle, permission: PERMISSIONS.employeesRead },
       //{ label: 'Employee Department', path: ROUTES.employeeDepartments, icon: GitBranch, permission: PERMISSIONS.employeeDepartmentsRead },
       //{ label: 'Departments', path: ROUTES.departments, icon: Building2, permission: PERMISSIONS.departmentsRead },
