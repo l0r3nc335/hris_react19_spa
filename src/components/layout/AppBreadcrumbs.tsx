@@ -10,15 +10,24 @@ import {
 } from '@/components/ui/breadcrumb'
 import { getRouteMeta } from '@/constants/routeMeta'
 
-export function AppBreadcrumbs(): React.JSX.Element {
+export interface AppBreadcrumbItem {
+  label: string
+  path?: string
+}
+
+export interface AppBreadcrumbsProps {
+  items?: AppBreadcrumbItem[]
+}
+
+export function AppBreadcrumbs({ items }: AppBreadcrumbsProps): React.JSX.Element {
   const { pathname } = useLocation()
-  const meta = getRouteMeta(pathname)
+  const crumbs = items ?? getRouteMeta(pathname).breadcrumbs
 
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {meta.breadcrumbs.map((crumb, index) => {
-          const isLast = index === meta.breadcrumbs.length - 1
+        {crumbs.map((crumb, index) => {
+          const isLast = index === crumbs.length - 1
           return (
             <React.Fragment key={`${crumb.label}-${index}`}>
               {index > 0 ? <BreadcrumbSeparator /> : null}

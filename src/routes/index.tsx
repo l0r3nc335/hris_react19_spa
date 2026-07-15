@@ -10,6 +10,7 @@ import { ROUTES } from "@/constants/routes"
 import { RootLayout } from '@/layouts/RootLayout'
 import { lazyRouteElement } from '@/routes/lazyRouteElement'
 import { ROUTE_SEGMENT_PERMISSIONS } from '@/constants/routePermissions'
+import { PERMISSIONS } from "@/constants/permissions"
 
 interface SuspenseWrapProps {
     children: ReactNode
@@ -65,10 +66,14 @@ export const router = createBrowserRouter([
                         element: <DashboardLayout />,
                         children: [
                             { path: 'dashboard', element: lazyRouteElement(Lazy.DashboardPage)},
-                            { path: '*', element: <SuspenseWrap><Lazy.NotFoundPage /></SuspenseWrap> },
+                            {
+                                path: 'my-subscription/payment/:subscriptionId',
+                                element: lazyRouteElement(Lazy.PaymentPage, PERMISSIONS.subscriptionPlansRead),
+                            },
                             dashboardRoute('users', Lazy.UsersListPage),
                             dashboardRoute('subscriptions', Lazy.SubscriptionsListPage),
                             dashboardRoute('subscription/plans', Lazy.SubscriptionPlansPage),
+                            { path: '*', element: <SuspenseWrap><Lazy.NotFoundPage /></SuspenseWrap> },
                             //{ path: 'users', element: <SuspenseWrap><Lazy.UsersListPage /></SuspenseWrap> },
                         ]
                     },

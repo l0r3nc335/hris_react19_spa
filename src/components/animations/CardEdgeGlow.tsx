@@ -174,8 +174,11 @@ export function CardEdgeGlow({
 
   return (
     <div ref={containerRef} className={cn('relative', className)}>
-      <div className="relative z-10">{children}</div>
-      {showGlow ? (
+      <div className="relative h-full rounded-xl border-0 bg-card">
+        {children}
+      </div>
+      
+      {showGlow && false ? (
         <div className="pointer-events-none absolute -inset-px z-20" aria-hidden>
           <Canvas
             orthographic

@@ -32,6 +32,10 @@ export const ROUTES = {
       plans: '/subscription/plans',
    },
 
+   mySubscription: {
+      mySubscriptionPayment: '/my-subscription/payment/:subscriptionId',
+   },
+
    system: {
       settings: '/settings',
    }, 

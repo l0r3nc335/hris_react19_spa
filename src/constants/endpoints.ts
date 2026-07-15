@@ -53,6 +53,11 @@ export const endpoints = {
     cancel: '/billing/cancel',
     invoices: '/billing/invoices',
     paymentMethods: '/billing/payment-methods',
+    paymentConfig: '/billing/payment-config',
+    stripeCreateIntent: '/billing/stripe/create-intent',
+    twoCTwoPToken: '/billing/2c2p/payment-token',
+    twoCTwoPProcess: '/billing/2c2p/process',
+    checkout: '/billing/checkout',
     ...lifecycle('/billing/invoices'),
   },
   employees: {
