@@ -62,7 +62,7 @@ Register   - [OK]
     ↓
 Verify Email   - [OK]
     ↓
-Select Plan - []
+Select Plan - [in progress]
     ↓
 Enter Credit Card
     ↓
