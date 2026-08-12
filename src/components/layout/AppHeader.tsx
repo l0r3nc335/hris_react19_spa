@@ -100,7 +100,7 @@ export function AppHeader(): React.JSX.Element {
                 {user?.email ?? 'Not signed in'}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={() => navigate(ROUTES.settings)}>
+              <DropdownMenuItem onSelect={() => navigate(ROUTES.system.settings)}>
                 Settings
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleLogout}>

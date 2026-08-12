@@ -96,6 +96,8 @@ const NO_REFRESH_RETRY_PATHS = [
   endpoints.auth.resetPassword,
   endpoints.auth.verifyEmail,
   endpoints.auth.logout,
+  // Guest session restore: 401 on /me must not trigger refresh → second csrf + retry me
+  endpoints.auth.me,
 ]
 
 function shouldSkipRefreshRetry(config: InternalAxiosRequestConfig): boolean {
@@ -185,8 +187,11 @@ export async function bootstrapCsrf(): Promise<void> {
   if (token) setCsrfToken(token)
 }
 
-/** Refresh CSRF before mutating auth calls (clears legacy cookie paths server-side). */
+/** Ensure a CSRF token exists before mutating auth calls (skips network if already loaded). */
 export async function ensureCsrfReady(): Promise<void> {
+  if (readCsrfToken()) {
+    return
+  }
   await bootstrapCsrf()
 }
 

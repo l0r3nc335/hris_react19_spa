@@ -22,7 +22,7 @@ export const PERMISSIONS = {
     //current be supported
     subscriptionsRead: 'subscriptions:read',
     subscriptionsWrite: 'subscriptions:write',
-    //forward  guidance vs  //curent pemissions from be
+    //forward  guidance vs  //curent permissions from be
     subscriptionPlansRead: 'my-subscription:read', //TODO: BE & FE change to subscription-plans:read
 
   } as const

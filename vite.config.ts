@@ -12,7 +12,7 @@ export default defineConfig(({mode}) => {
   const __fileName = fileURLToPath(import.meta.url)
   const __dirname = dirname(__fileName)
   const env = loadEnv(mode, __dirname, '')
-  const proxyTarget = env.VITE_DEV_PROXY_TARGET || 'http://localhost:3000'
+  const proxyTarget = env.VITE_DEV_PROXY_TARGET || 'http://localhost:8000'
 
   return {
     plugins: [
