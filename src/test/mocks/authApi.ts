@@ -6,7 +6,6 @@ import { mockAdminUser, mockUser } from '@/test/fixtures'
 export const authApiMocks = {
   login: vi.fn(),
   logout: vi.fn(),
-  refreshSession: vi.fn(),
   fetchMe: vi.fn(),
   register: vi.fn(),
   forgotPassword: vi.fn(),
@@ -16,7 +15,6 @@ export const authApiMocks = {
 vi.mock('@/services/api/authApi', () => ({
   login: (...args: unknown[]) => authApiMocks.login(...args),
   logout: (...args: unknown[]) => authApiMocks.logout(...args),
-  refreshSession: (...args: unknown[]) => authApiMocks.refreshSession(...args),
   fetchMe: (...args: unknown[]) => authApiMocks.fetchMe(...args),
   register: (...args: unknown[]) => authApiMocks.register(...args),
   forgotPassword: (...args: unknown[]) => authApiMocks.forgotPassword(...args),
@@ -35,7 +33,6 @@ export function setupDefaultAuthApiMocks(): void {
   resetAuthApiMocks()
   authApiMocks.login.mockResolvedValue(mockLoginSuccess())
   authApiMocks.logout.mockResolvedValue(undefined)
-  authApiMocks.refreshSession.mockResolvedValue(undefined)
   authApiMocks.fetchMe.mockResolvedValue(mockUser)
   authApiMocks.register.mockResolvedValue(mockAdminUser)
   authApiMocks.forgotPassword.mockResolvedValue(undefined)

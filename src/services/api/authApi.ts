@@ -23,11 +23,6 @@ export async function logout(): Promise<void> {
   await httpClient.post(endpoints.auth.logout)
 }
 
-export async function refreshSession(): Promise<void> {
-  await ensureCsrfReady()
-  await httpClient.post(endpoints.auth.refresh)
-}
-
 export async function fetchMe(): Promise<User> {
   const res = await httpClient.get<ApiResponse<User>>(endpoints.auth.me)
   return res.data.data

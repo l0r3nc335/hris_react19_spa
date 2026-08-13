@@ -26,12 +26,14 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
+      port: 5174,
+      strictPort: true,
       proxy: {
         '/api': {
           target: proxyTarget,
-          changeOrigin: true
-        }
-      }
+          changeOrigin: true,
+        },
+      },
     },
     test: {
       globals: true,

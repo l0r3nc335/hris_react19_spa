@@ -4,7 +4,6 @@ export const httpClientMocks = {
   setTenantId: vi.fn(),
   clearSession: vi.fn(),
   bootstrapCsrf: vi.fn(),
-  setAuthHandlers: vi.fn(),
   ensureCsrfReady: vi.fn(),
 }
 
@@ -15,7 +14,6 @@ vi.mock('@/services/httpClient', async (importOriginal) => {
     setTenantId: (...args: unknown[]) => httpClientMocks.setTenantId(...args),
     clearSession: (...args: unknown[]) => httpClientMocks.clearSession(...args),
     bootstrapCsrf: (...args: unknown[]) => httpClientMocks.bootstrapCsrf(...args),
-    setAuthHandlers: (...args: unknown[]) => httpClientMocks.setAuthHandlers(...args),
     ensureCsrfReady: (...args: unknown[]) => httpClientMocks.ensureCsrfReady(...args),
   }
 })
@@ -24,7 +22,6 @@ export function resetHttpClientMocks(): void {
   httpClientMocks.setTenantId.mockReset()
   httpClientMocks.clearSession.mockReset()
   httpClientMocks.bootstrapCsrf.mockReset()
-  httpClientMocks.setAuthHandlers.mockReset()
   httpClientMocks.ensureCsrfReady.mockReset()
   httpClientMocks.bootstrapCsrf.mockResolvedValue(undefined)
   httpClientMocks.ensureCsrfReady.mockResolvedValue(undefined)

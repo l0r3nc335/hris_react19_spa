@@ -10,7 +10,6 @@ export const endpoints = {
   auth: {
     login: '/auth/login',
     logout: '/auth/logout',
-    refresh: '/auth/refresh-token',
     csrf: '/auth/csrf',
     register: '/auth/register',
     forgotPassword: '/auth/forgot-password',

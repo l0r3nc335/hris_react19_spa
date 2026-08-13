@@ -23,7 +23,9 @@ export const login = createAsyncThunk(
   'auth/login',
   async (payload: authApi.LoginPayload, { rejectWithValue }) => {
     try {
-      return await authApi.login(payload)
+      const res = await authApi.login(payload)
+      console.log(res);
+      return res
     } catch (e) {
       return rejectWithValue(normalizeApiError(e).message)
     }
@@ -37,18 +39,6 @@ export const fetchMe = createAsyncThunk('auth/fetchMe', async (_, { rejectWithVa
     return rejectWithValue(normalizeApiError(e).message)
   }
 })
-
-export const refreshSession = createAsyncThunk(
-  'auth/refresh',
-  async (_, { rejectWithValue }) => {
-    try {
-      await authApi.refreshSession()
-      return true
-    } catch (e) {
-      return rejectWithValue(normalizeApiError(e).message)
-    }
-  },
-)
 
 export const logout = createAsyncThunk('auth/logout', async () => {
   try {

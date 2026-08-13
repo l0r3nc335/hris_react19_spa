@@ -13,18 +13,12 @@ describe('bootstrapAuth', () => {
     httpClientMocks.bootstrapCsrf.mockResolvedValue(undefined)
   })
 
-  it('registers auth handlers and starts session restore', () => {
+  it('starts session restore and bootstraps CSRF', () => {
     const store = createTestStore()
     const dispatchSpy = vi.spyOn(store, 'dispatch')
 
     bootstrapAuth(store)
 
-    expect(httpClientMocks.setAuthHandlers).toHaveBeenCalledWith(
-      expect.objectContaining({
-        refresh: expect.any(Function),
-        unauthorized: expect.any(Function),
-      }),
-    )
     expect(dispatchSpy).toHaveBeenCalledWith(startSessionRestore())
     expect(httpClientMocks.bootstrapCsrf).toHaveBeenCalled()
   })
