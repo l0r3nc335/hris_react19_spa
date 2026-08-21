@@ -8,7 +8,9 @@ import { ScrollArea } from "../ui/scroll-area"
 import { NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from "@/constants/routes"
 import { cn } from "@/lib/utils"
+import { isNavItemLockedDuringOnboarding, isSubscriberOnboarding } from '@/utils/subscriberOnboarding'
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible"
+import { selectUser } from '@/slices/authSlice'
 
 interface AppSidebarProps {
     onNavigate?: () => void,
@@ -31,11 +33,36 @@ function SidebarNavItem({
     item,
     collapsed,
     onNavigate,
+    disabled = false,
   }: {
     item: NavItem
     collapsed: boolean
     onNavigate?: () => void
+    disabled?: boolean
   }): React.JSX.Element {
+    if (disabled) {
+      const content = (
+        <span
+          className={cn(
+            navLinkClassName(collapsed, false),
+            'cursor-not-allowed opacity-40',
+          )}
+          aria-disabled
+        >
+          <item.icon className={cn('h-4 w-4 shrink-0', collapsed && 'my-2 mx-auto')} />
+          {!collapsed ? item.label : null}
+        </span>
+      )
+      if (collapsed) {
+        return (
+          <Tooltip content="Complete subscription first" side="right">
+            {content}
+          </Tooltip>
+        )
+      }
+      return content
+    }
+
     const link = (
       <NavLink
         to={item.path}
@@ -64,8 +91,10 @@ export function AppSidebar({
     collapsed = false
 }: AppSidebarProps): React.JSX.Element 
 {
-    const { pathname } = useLocation()
     const dispatch = useAppDispatch()
+    const { pathname } = useLocation()
+    const user = useAppSelector(selectUser)
+    const onboardingLocked = isSubscriberOnboarding(user)
     const expandedGroups = useAppSelector((s) => s.ui.expandedNavGroups)
     const searchQuery = useAppSelector((s) => s.ui.sidebarSearchQuery)
     const { can } = usePermission()
@@ -115,6 +144,7 @@ export function AppSidebar({
                     item={item}
                     collapsed
                     onNavigate={onNavigate}
+                    disabled={isNavItemLockedDuringOnboarding(item.path, onboardingLocked, pathname)}
                   />
                 ))}
               </nav>
@@ -205,6 +235,7 @@ export function AppSidebar({
                           item={item}
                           collapsed={false}
                           onNavigate={onNavigate}
+                          disabled={isNavItemLockedDuringOnboarding(item.path, onboardingLocked, pathname)}
                         >
                         </SidebarNavItem>
                       ))}

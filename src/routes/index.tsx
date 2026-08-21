@@ -24,7 +24,8 @@ function SuspenseWrap({children}: SuspenseWrapProps): React.JSX.Element
 function dashboardRoute(
     path: string,
     page: Parameters<typeof lazyRouteElement>[0],
-): { path: string; element: ReactNode } {
+): { path: string; element: ReactNode } 
+{
     return {
       path,
       element: lazyRouteElement(page, ROUTE_SEGMENT_PERMISSIONS[path]),
@@ -65,7 +66,16 @@ export const router = createBrowserRouter([
                     {
                         element: <DashboardLayout />,
                         children: [
-                            { path: 'dashboard', element: lazyRouteElement(Lazy.DashboardPage)},
+                            { 
+                                path: 'dashboard', 
+                                element: lazyRouteElement(Lazy.DashboardPage)
+                            },
+                            {
+                                path: 'subscription',
+                                children: [ 
+                                    dashboardRoute('plans', Lazy.SubscriptionPlansPage),
+                                ]  
+                            },
                             {
                                 path: 'my-subscription/payment/:subscriptionId',
                                 element: lazyRouteElement(Lazy.PaymentPage, PERMISSIONS.subscriptionPlansRead),

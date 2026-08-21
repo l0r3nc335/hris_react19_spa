@@ -7,9 +7,11 @@ export const LandingPage = lazy(() =>
 export const AboutPage = lazy(() =>
     import('@/modules/public/pages/AboutPage').then((m) => ({ default: m.AboutPage })),
 )
+
 export const PricingPage = lazy(() =>
     import('@/modules/public/pages/PricingPage').then((m) => ({ default: m.PricingPage })),
 )
+
 export const ContactPage = lazy(() =>
     import('@/modules/public/pages/ContactPage').then((m) => ({ default: m.ContactPage })),
 )

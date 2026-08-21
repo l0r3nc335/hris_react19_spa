@@ -20,6 +20,7 @@ export const PERMISSIONS = {
     billingRead: 'billing:read',
 
     //current be supported
+    manageSubscription: 'manage:subscription',
     subscriptionsRead: 'subscriptions:read',
     subscriptionsWrite: 'subscriptions:write',
     //forward  guidance vs  //curent permissions from be
