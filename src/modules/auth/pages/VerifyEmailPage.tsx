@@ -82,7 +82,7 @@ export function VerifyEmailPage(): React.JSX.Element {
         : 'Please wait while we verify your email address.'
 
   return (
-    <PublicPageShell title={title} description={description}>
+    <PublicPageShell title={title} description={description ?? undefined}>
       <Card className="mx-auto max-w-md">
         <CardContent className="pt-0">
           {state === 'verifying' ? (

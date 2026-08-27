@@ -1,4 +1,4 @@
-import { configureStore, type PreloadedState } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, renderHook, type RenderOptions as RtlRenderOptions } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
@@ -8,13 +8,13 @@ import { rootReducer } from '@/store/rootReducer'
 import type { AppStore, RootState } from '@/store'
 
 export interface RenderWithProvidersOptions extends Omit<RtlRenderOptions, 'wrapper'> {
-  preloadedState?: PreloadedState<RootState>
+  preloadedState?: Partial<RootState>
   initialEntries?: string[]
   routePath?: string
   queryClient?: QueryClient
 }
 
-export function createTestStore(preloadedState?: PreloadedState<RootState>): AppStore {
+export function createTestStore(preloadedState?: Partial<RootState>): AppStore {
   return configureStore({
     reducer: rootReducer,
     preloadedState,

@@ -14,7 +14,7 @@ export function SubscriptionPlansPage(): React.JSX.Element {
 
   return (
     <PageShell
-      title="My Subscription"
+      title="Subscription Plan"
       description="Choose the plan that fits your organization."
       icon={<CreditCard className="h-5 w-5" />}
       breadcrumbs={[

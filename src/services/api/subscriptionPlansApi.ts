@@ -39,6 +39,6 @@ function mapPlan(record: PlanApiRecord): SubscriptionPlan {
 }
 
 export async function fetchSubscriptionPlans(): Promise<SubscriptionPlan[]> {
-  const records = await apiGet<PlanApiRecord[]>(endpoints.billing.plans)
+  const records = await apiGet<PlanApiRecord[]>(endpoints.subscriptions.plans)
   return records.map(mapPlan)
 }

@@ -40,6 +40,7 @@ export function PayPalPaymentForm({
           style={{ layout: 'vertical', color: 'blue', shape: 'rect', label: 'paypal' }}
           createOrder={(_data, actions) =>
             actions.order.create({
+              intent: 'CAPTURE',
               purchase_units: [
                 {
                   amount: {

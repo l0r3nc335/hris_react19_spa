@@ -13,7 +13,7 @@ export default function TestReactHookForm() {
         resolver: zodResolver(formSchema),
     })
     
-    const submit = (data, FormFields) => alert(`FormSubmitted: ${data.username}`)
+    const submit = (data: FormFields) => alert(`FormSubmitted: ${data.username}`)
 
     return (
         <form onSubmit={handleSubmit(submit)} className="border border-black-500 p-4 flex flex-col gap-2 max-w-sm">

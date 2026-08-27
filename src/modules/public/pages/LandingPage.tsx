@@ -7,9 +7,6 @@ import {
     Wallet,
   } from 'lucide-react'
 import { PublicPageShell } from "./PublicPageShell"
-import { Button } from "@/ui"
-import { Link } from "react-router-dom"
-import { ROUTES } from '@/constants/routes'
 
 const FEATURES = [
     {

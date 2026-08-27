@@ -28,7 +28,8 @@ export function PlanCard({
   isCurrent,
   isDisabled,
   hasSubscription,
-}: PlanCardProps): React.JSX.Element {
+}: PlanCardProps): React.JSX.Element 
+{
   const navigate = useNavigate()
   const isEnterprise = !plan.price || Number(plan.price) <= 0
   const bullets = parseDescriptionBullets(plan.description)

@@ -21,18 +21,14 @@ import {
 //import { GlobalSearch } from './GlobalSearch'
 //import { AppBreadcrumbs } from './AppBreadcrumbs'
 //import { getRouteMeta } from '@/constants/routeMeta'
-import { useLocation } from 'react-router-dom'
-import { getRouteMeta } from '@/constants/routeMeta'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { AppSidebar } from './AppSidebar'
 
 export function AppHeader(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const location = useLocation()
   const user = useAppSelector(selectUser)
   const { resolvedTheme, toggleTheme } = useTheme()
-  const meta =  getRouteMeta(location.pathname)
 
   const handleLogout = (): void => {
     void dispatch(logout()).then((result) => {

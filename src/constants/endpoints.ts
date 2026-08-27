@@ -32,6 +32,7 @@ export const endpoints = {
     ...lifecycle('/users'),
   },
   subscriptions: {
+    plans: '/subscriptions/plans',
     list: '/subscriptions',
     byId: id('/subscriptions'),
     profile: (subscriptionId: string) => `/subscriptions/${subscriptionId}/profile`,
@@ -46,7 +47,7 @@ export const endpoints = {
   billing: {
     list: '/billing/invoices',
     byId: id('/billing/invoices'),
-    plans: '/billing/plans',
+    //plans: '/billing/plans', moved to subscriptions
     subscription: '/billing/subscription',
     subscribe: '/billing/subscribe',
     cancel: '/billing/cancel',

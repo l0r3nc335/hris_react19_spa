@@ -26,6 +26,8 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
+      host: '0.0.0.0',
+      allowedHosts: ['.trycloudflare.com'],
       port: 5174,
       strictPort: true,
       proxy: {

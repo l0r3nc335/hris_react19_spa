@@ -53,11 +53,11 @@ export const router = createBrowserRouter([
                 path: '/auth',
                 element: <AuthLayout />,
                 children: [
-                    { path: 'login', index: true, element: <Suspense> <Lazy.LoginPage /> </Suspense> },
-                    { path: 'forgot-password', element: <Suspense> <Lazy.ForgotPasswordPage /> </Suspense> },
-                    { path: 'register', element: <Suspense> <Lazy.RegisterPage /> </Suspense> },
-                    { path: 'verify-email', element: <Suspense> <Lazy.VerifyEmailPage /> </Suspense> },
-                    { path: 'verify', element: <Suspense> <Lazy.VerifyEmailPage /> </Suspense> }
+                    { path: 'login', index: true, element: <SuspenseWrap><Lazy.LoginPage /></SuspenseWrap> },
+                    { path: 'forgot-password', element: <SuspenseWrap><Lazy.ForgotPasswordPage /></SuspenseWrap> },
+                    { path: 'register', element: <SuspenseWrap><Lazy.RegisterPage /></SuspenseWrap> },
+                    { path: 'verify-email', element: <SuspenseWrap><Lazy.VerifyEmailPage /></SuspenseWrap> },
+                    { path: 'verify', element: <SuspenseWrap><Lazy.VerifyEmailPage /></SuspenseWrap> }
                 ]
             },
             {

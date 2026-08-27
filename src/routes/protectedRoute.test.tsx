@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { screen } from '@testing-library/react'
 import { ProtectedRoute } from '@/routes/protectedRoute'
 import { ROUTES } from '@/constants/routes'

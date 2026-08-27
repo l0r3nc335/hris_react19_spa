@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks"
 import { usePermission } from "@/hooks/usePermission"
 import { setSidebarSearchQuery, toggleSidebar, toggleNavGroup } from "@/slices/uiSlice"
 import { Button, Input, Tooltip } from "@/ui"
-import { Group, PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
+import { PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area"
 import { NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from "@/constants/routes"

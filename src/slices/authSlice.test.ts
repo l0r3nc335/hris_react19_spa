@@ -11,8 +11,6 @@ import {
 } from '@/slices/authSlice'
 import {
   authApiMocks,
-  mockLoginSuccess,
-  resetAuthApiMocks,
   setupDefaultAuthApiMocks,
 } from '@/test/mocks/authApi'
 import { httpClientMocks } from '@/test/mocks/httpClient'

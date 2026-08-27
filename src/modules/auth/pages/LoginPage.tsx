@@ -51,7 +51,7 @@ export function LoginPage(): React.JSX.Element {
     <PublicPageShell>
         <div className="grid gap-4 md:grid-cols-2 md:gap-6">
             <div className="space-y-3">
-                { companyId?.length > 0 ? companyId : null }
+                { (companyId?.length ?? 0) > 0 ? companyId : null }
             </div>
 
             <CardEdgeGlow className="w-full">
