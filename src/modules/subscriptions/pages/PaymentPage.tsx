@@ -22,7 +22,7 @@ import {
   checkout,
   usePaymentConfig,
   usePaymentMethods,
-} from '@/services/api/mySubscriptionApi'
+} from '@/services/api/billingApi'
 import { normalizeApiError } from '@/services/errors'
 import { fetchMe } from '@/slices/authSlice'
 import { cn } from '@/lib/utils'

@@ -3,7 +3,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { createStripeIntent } from '@/services/api/mySubscriptionApi'
+import { createStripeIntent } from '@/services/api/billingApi'
 
 interface StripePaymentFormProps {
   publishableKey: string

@@ -6,7 +6,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   createTwoCTwoPToken,
   processTwoCTwoPCard,
-} from '@/services/api/mySubscriptionApi'
+} from '@/services/api/billingApi'
 
 interface TwoCTwoPPaymentFormProps {
   subscriptionId: string

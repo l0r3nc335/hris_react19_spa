@@ -19,7 +19,7 @@ import {
   checkout,
   usePaymentConfig,
   usePaymentMethods,
-} from '@/services/api/mySubscriptionApi'
+} from '@/services/api/billingApi'
 import { normalizeApiError } from '@/services/errors'
 import { fetchMe } from '@/slices/authSlice'
 import { cn } from '@/lib/utils'
@@ -35,8 +35,13 @@ export function PaymentMethodsPage(): React.JSX.Element {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { data: plans, isLoading: plansLoading } = useSubscriptionPlans()
-  const { data: paymentMethods, isLoading: methodsLoading } = usePaymentMethods()
-  const { data: paymentConfig, isLoading: configLoading } = usePaymentConfig()
+  const {
+    data: paymentMethods,
+    isLoading: methodsLoading,
+    isError: methodsError,
+    error: methodsQueryError,
+  } = usePaymentMethods()
+  const { data: paymentConfig, isLoading: configLoading, isError: configError } = usePaymentConfig()
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null)
   const [additionalUsers, setAdditionalUsers] = useState(0)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
@@ -47,18 +52,39 @@ export function PaymentMethodsPage(): React.JSX.Element {
     [plans, slug],
   )
 
+  const breadcrumbs = useMemo(
+    () => [
+      { label: 'Subscription Plans', path: ROUTES.subscription.plans },
+      ...(plan ? [{ label: plan.label }] : []),
+      { label: 'Payment Methods' },
+    ],
+    [plan],
+  )
+
   const monthlyBase = plan?.price ? Number(plan.price) : 0
   const monthlyAdditional = plan?.priceAdditionalUsers ? Number(plan.priceAdditionalUsers) : 0
   const annualBase = monthlyBase * 12
   const annualAdditional = additionalUsers * monthlyAdditional * 12
   const annualTotal = annualBase + annualAdditional
   const currency = plan?.currency ?? 'USD'
+  const hasProviders = Boolean(paymentMethods?.length)
+  const methodsLoadError = methodsError
+    ? normalizeApiError(methodsQueryError).message
+    : null
 
   useEffect(() => {
-    if (!selectedMethod && paymentMethods?.length) {
-      setSelectedMethod(paymentMethods[0].name)
-    }
-  }, [paymentMethods, selectedMethod])
+    if (selectedMethod || !paymentMethods?.length) return
+
+    const preferred =
+      paymentMethods.find((method) => {
+        if (method.name === '2c2p') return paymentConfig?.twoCTwoPEnabled
+        if (method.name === 'stripe') return paymentConfig?.stripeEnabled
+        if (method.name === 'paypal') return paymentConfig?.paypalEnabled
+        return false
+      }) ?? paymentMethods[0]
+
+    setSelectedMethod(preferred.name)
+  }, [paymentMethods, paymentConfig, selectedMethod])
 
   const completeCheckout = async (paymentMethodName: string, gatewayReference: string): Promise<void> => {
     if (!plan) return
@@ -94,10 +120,7 @@ export function PaymentMethodsPage(): React.JSX.Element {
         title="Payment Methods"
         description="Complete your subscription using PayPal, Stripe, or 2C2P sandbox."
         icon={<Wallet className="h-5 w-5" />}
-        breadcrumbs={[
-          { label: 'Subscription Plans', path: ROUTES.subscription.plans },
-          { label: 'Payment Methods' },
-        ]}
+        breadcrumbs={breadcrumbs}
       >
         <p className="text-sm text-destructive">Plan not found.</p>
         <Button className="mt-4" variant="outline" onClick={() => navigate(ROUTES.subscription.plans)}>
@@ -114,10 +137,7 @@ export function PaymentMethodsPage(): React.JSX.Element {
       title="Payment Methods"
       description="Complete your subscription using PayPal, Stripe, or 2C2P sandbox."
       icon={<Wallet className="h-5 w-5" />}
-      breadcrumbs={[
-        { label: 'Subscription Plans', path: ROUTES.subscription.plans },
-        { label: 'Payment Methods' },
-      ]}
+      breadcrumbs={breadcrumbs}
     >
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
@@ -127,20 +147,35 @@ export function PaymentMethodsPage(): React.JSX.Element {
             </Alert>
           ) : null}
 
+          {methodsLoadError || configError || !hasProviders ? (
+            <Alert variant="destructive">
+              <AlertDescription>
+                {methodsLoadError
+                  ?? (configError
+                    ? 'Unable to load payment configuration. Please try again.'
+                    : 'No payment methods are available right now. Please try again later.')}
+              </AlertDescription>
+            </Alert>
+          ) : null}
+
           <section className="space-y-3">
             <h2 className="text-sm font-medium text-muted-foreground">Select a provider</h2>
-            <div className="flex flex-wrap gap-2">
-              {paymentMethods?.map((method) => (
-                <Button
-                  key={method.id}
-                  type="button"
-                  variant={activeMethod === method.name ? 'default' : 'outline'}
-                  onClick={() => setSelectedMethod(method.name)}
-                >
-                  {PROVIDER_LABELS[method.name] ?? method.label}
-                </Button>
-              ))}
-            </div>
+            {hasProviders ? (
+              <div className="flex flex-wrap gap-2">
+                {paymentMethods?.map((method) => (
+                  <Button
+                    key={method.id}
+                    type="button"
+                    variant={activeMethod === method.name ? 'default' : 'outline'}
+                    onClick={() => setSelectedMethod(method.name)}
+                  >
+                    {PROVIDER_LABELS[method.name] ?? method.label}
+                  </Button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">Providers will appear once billing is available.</p>
+            )}
           </section>
 
           <section className="rounded-xl border border-border/60 bg-card p-6">
@@ -194,6 +229,12 @@ export function PaymentMethodsPage(): React.JSX.Element {
                 <AlertDescription>
                   Add PAYPAL_CLIENT_ID to the backend environment to enable PayPal sandbox buttons.
                 </AlertDescription>
+              </Alert>
+            ) : null}
+
+            {!activeMethod && hasProviders ? (
+              <Alert>
+                <AlertDescription>Select a payment provider to continue.</AlertDescription>
               </Alert>
             ) : null}
           </section>
