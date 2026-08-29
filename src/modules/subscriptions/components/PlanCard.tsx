@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { CardEdgeGlow } from '@/components/animations/CardEdgeGlow'
 import { formatPrice } from '@/modules/subscriptions/constants'
 import type { SubscriptionPlan } from '@/modules/subscriptions/types'
-import { mySubscriptionPaymentPath } from '@/utils/subscriberOnboarding'
+import { subscriptionPlanPaymentMethods } from '@/utils/subscriberOnboarding'
 import { cn } from '@/lib/utils'
 
 function parseDescriptionBullets(description?: string): string[] {
@@ -40,17 +40,15 @@ export function PlanCard({
 
   const ctaLabel = isEnterprise
     ? 'Contact Sales'
-    : hasSubscription
-      ? isCurrent
-        ? 'Current Plan'
-        : 'Switch Plan'
-      : plan.slug === 'starter'
-        ? 'Get Started'
-        : 'Upgrade'
+    : isCurrent
+      ? 'Current Plan'
+      : hasSubscription
+        ? 'Switch Plan'
+        : 'Get Started'
 
   const handleCta = (): void => {
     if (isEnterprise || isCurrent || isDisabled) return
-    navigate(mySubscriptionPaymentPath(plan.id))
+    navigate(subscriptionPlanPaymentMethods(plan.slug))
   }
 
   return (

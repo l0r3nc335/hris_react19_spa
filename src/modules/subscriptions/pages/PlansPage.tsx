@@ -6,7 +6,7 @@ import { useSubscriptionPlans } from '@/modules/subscriptions/hooks'
 import { useAppSelector } from '@/hooks'
 import { selectUser } from '@/slices/authSlice'
 
-export function SubscriptionPlansPage(): React.JSX.Element {
+export function PlansPage(): React.JSX.Element {
   const user = useAppSelector(selectUser)
   const { data: plans, isLoading, isError } = useSubscriptionPlans()
   const currentSlug = user?.userSubscription?.plan?.slug ?? user?.userSubscription?.subscriptionId
@@ -17,10 +17,6 @@ export function SubscriptionPlansPage(): React.JSX.Element {
       title="Subscription Plan"
       description="Choose the plan that fits your organization."
       icon={<CreditCard className="h-5 w-5" />}
-      breadcrumbs={[
-        { label: 'Subscription' },
-        { label: 'Plans' },
-      ]}
     >
       {isLoading ? <PageLoader /> : null}
       {isError ? (

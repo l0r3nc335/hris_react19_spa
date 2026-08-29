@@ -1,6 +1,3 @@
-/*
-  RECREATED IN PaymentMethodsPage.tsx
-*/
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CreditCard, Wallet } from 'lucide-react'
@@ -33,8 +30,8 @@ const PROVIDER_LABELS: Record<string, string> = {
   '2c2p': '2C2P',
 }
 
-export function PaymentPage(): React.JSX.Element {
-  const { subscriptionId = '' } = useParams<{ subscriptionId: string }>()
+export function PaymentMethodsPage(): React.JSX.Element {
+  const { slug = '' } = useParams<{ slug: string }>()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { data: plans, isLoading: plansLoading } = useSubscriptionPlans()
@@ -46,8 +43,8 @@ export function PaymentPage(): React.JSX.Element {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const plan = useMemo(
-    () => plans?.find((item) => item.id === subscriptionId),
-    [plans, subscriptionId],
+    () => plans?.find((item) => item.slug === slug),
+    [plans, slug],
   )
 
   const monthlyBase = plan?.price ? Number(plan.price) : 0
@@ -93,7 +90,15 @@ export function PaymentPage(): React.JSX.Element {
 
   if (!plan) {
     return (
-      <PageShell title="Payment">
+      <PageShell
+        title="Payment Methods"
+        description="Complete your subscription using PayPal, Stripe, or 2C2P sandbox."
+        icon={<Wallet className="h-5 w-5" />}
+        breadcrumbs={[
+          { label: 'Subscription Plans', path: ROUTES.subscription.plans },
+          { label: 'Payment Methods' },
+        ]}
+      >
         <p className="text-sm text-destructive">Plan not found.</p>
         <Button className="mt-4" variant="outline" onClick={() => navigate(ROUTES.subscription.plans)}>
           Back to plans
@@ -110,8 +115,7 @@ export function PaymentPage(): React.JSX.Element {
       description="Complete your subscription using PayPal, Stripe, or 2C2P sandbox."
       icon={<Wallet className="h-5 w-5" />}
       breadcrumbs={[
-        { label: 'Subscription' },
-        { label: 'Plans', path: ROUTES.subscription.plans },
+        { label: 'Subscription Plans', path: ROUTES.subscription.plans },
         { label: 'Payment Methods' },
       ]}
     >

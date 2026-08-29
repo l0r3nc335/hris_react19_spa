@@ -77,7 +77,13 @@ export const router = createBrowserRouter([
                                 ]  
                             },
                             {
-                                path: 'my-subscription/payment/:subscriptionId',
+                                path: 'subscription',
+                                children: [ 
+                                    dashboardRoute('plans/:slug/payment-methods', Lazy.SubscriptionPlanPaymentMethods),
+                                ]  
+                            },
+                            {
+                                path: 'subscription/payment/:subscriptionId',
                                 element: lazyRouteElement(Lazy.PaymentPage, PERMISSIONS.subscriptionPlansRead),
                             },
                             dashboardRoute('users', Lazy.UsersListPage),

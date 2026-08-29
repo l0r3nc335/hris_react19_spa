@@ -1,9 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { queryClient } from '@/lib/queryClient'
 import * as authApi from '@/services/api/authApi'
 import { clearSession, setTenantId } from '@/services/httpClient'
 import type { User } from '@/types'
 import type { RootState } from '@/store'
 import { normalizeApiError } from '@/services/errors'
+
+function clearAppQueryCache(): void {
+  queryClient.clear()
+}
 
 export interface AuthState {
   user: User | null
@@ -70,6 +75,7 @@ const authSlice = createSlice({
         state.error = null
       })
       .addCase(login.fulfilled, (state, action) => {
+        clearAppQueryCache()
         state.status = 'succeeded'
         state.user = action.payload.user
         state.isAuthenticated = true
@@ -84,6 +90,7 @@ const authSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchMe.fulfilled, (state, action) => {
+        clearAppQueryCache()
         state.status = 'succeeded'
         state.user = action.payload
         state.isAuthenticated = true
@@ -92,12 +99,14 @@ const authSlice = createSlice({
       .addCase(fetchMe.rejected, (state) => {
         state.status = 'failed'
         if (state.isAuthenticated && state.user) return
+        clearAppQueryCache()
         state.isAuthenticated = false
         state.user = null
         clearSession()
         setTenantId(null)
       })
       .addCase(logout.fulfilled, (state) => {
+        clearAppQueryCache()
         state.user = null
         state.isAuthenticated = false
         state.status = 'idle'

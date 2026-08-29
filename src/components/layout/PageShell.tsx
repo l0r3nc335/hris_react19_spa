@@ -27,7 +27,9 @@ export function PageShell({
   return (
     <div className="flex min-h-full flex-col">
       <div className="flex-1 space-y-4">
-        {showBreadcrumbs ? <AppBreadcrumbs items={breadcrumbs} /> : null}
+        {showBreadcrumbs && breadcrumbs?.length ? (
+          <AppBreadcrumbs items={breadcrumbs} />
+        ) : null}
 
         {title || description || toolbar ? (
           <PageHeader 

@@ -45,7 +45,11 @@ export const SubscriptionsListPage = lazy (() =>
 )
 
 export const SubscriptionPlansPage = lazy (() =>
-    import('@/modules/subscriptions/pages/SubscriptionPlansPage').then((m) => ({default: m.SubscriptionPlansPage}))
+    import('@/modules/subscriptions/pages/PlansPage').then((m) => ({default: m.PlansPage}))
+)
+
+export const SubscriptionPlanPaymentMethods = lazy (() =>
+    import('@/modules/subscriptions/pages/PaymentMethodsPage').then((m) => ({default: m.PaymentMethodsPage}))
 )
 
 export const UsersListPage = lazy (() =>

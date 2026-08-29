@@ -7,11 +7,13 @@ export function isSubscriberOnboarding(user: User | null | undefined): boolean {
 
 export function isSubscriberOnboardingPath(pathname: string): boolean {
   if (pathname === ROUTES.subscription.plans) return true
-  return pathname.startsWith(`${ROUTES.subscription.plans}/payment/`)
+  const plansPrefix = `${ROUTES.subscription.plans}/`
+  if (!pathname.startsWith(plansPrefix)) return false
+  return pathname.endsWith('/payment-methods') || pathname.includes('/payment/')
 }
 
-export function mySubscriptionPaymentPath(subscriptionId: string): string {
-  return `${ROUTES.subscription.plans}/payment/${subscriptionId}`
+export function subscriptionPlanPaymentMethods(slug: string): string {
+  return `${ROUTES.subscription.plans}/${slug}/payment-methods`
 }
 
 const ONBOARDING_NAV_PATHS = [ROUTES.subscription.plans] as const
