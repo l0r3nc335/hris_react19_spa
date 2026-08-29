@@ -18,12 +18,7 @@ export function PageHeader({
     <div className="mb-6 flex items-start justify-between gap-4">
       <div className="flex items-start gap-3">
         <div>
-          <h1
-            className={cn(
-              'text-2xl font-bold tracking-wide',
-              'bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-transparent',
-            )}
-          >
+          <h1 className={cn('text-2xl font-bold tracking-tight text-[var(--wf-navy)]')}>
             {title}
           </h1>
           {description ? (

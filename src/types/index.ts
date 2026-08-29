@@ -7,6 +7,16 @@ export interface BaseEntity {
   updatedAt: string
 }
 
+export interface CompanySummary {
+  id: string
+  name: string
+  legalName?: string
+  tradingName?: string
+  abn?: string
+  timezone?: string
+  locale?: string
+}
+
 export interface User extends BaseEntity {
   email: string
   firstName: string
@@ -15,6 +25,7 @@ export interface User extends BaseEntity {
   permissions: string[]
   isActive: boolean
   userSubscription?: UserSubscription | null
+  company?: CompanySummary | null
 }
 
 export interface UserSubscription {

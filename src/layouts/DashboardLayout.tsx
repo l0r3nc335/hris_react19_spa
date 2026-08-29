@@ -4,29 +4,27 @@ import { cn } from '@/lib/utils'
 import { AppSidebar } from '@/components/layout/AppSidebar'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { SubscriberOnboardingGuard } from '@/components/SubscriberOnboardingGuard'
-//import { AppFooter } from '@/components/layout/AppFooter'
 
 export function DashboardLayout(): React.JSX.Element {
   const sidebarOpen = useAppSelector((s) => s.ui.sidebarOpen)
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-[var(--wf-content-bg)]">
       <aside
         className={cn(
-          'hidden border-r border-sidebar-border bg-sidebar md:block md:transition-all',
+          'hidden bg-[var(--wf-navy)] md:block md:transition-all',
           sidebarOpen ? 'md:w-64' : 'md:w-14',
         )}
       >
-        <AppSidebar collapsed={!sidebarOpen}/>
+        <AppSidebar collapsed={!sidebarOpen} />
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <AppHeader />
         <main className="flex flex-1 flex-col overflow-auto p-6">
-          <SubscriberOnboardingGuard >
+          <SubscriberOnboardingGuard>
             <Outlet />
           </SubscriberOnboardingGuard>
         </main>
-        {/*<AppFooter />*/}
       </div>
     </div>
   )

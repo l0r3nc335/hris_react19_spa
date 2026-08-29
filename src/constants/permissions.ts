@@ -1,34 +1,46 @@
 export const PERMISSIONS = {
-    usersRead: 'users:read',
-    usersWrite: 'users:write',
+  usersRead: 'users:read',
+  usersWrite: 'users:write',
 
-    employeesRead: 'employees:read',
-    employeesWrite: 'employees:write',
-    employeeDepartmentsRead: 'employee-departments:read',
-    employeeDepartmentsWrite: 'employee-departments:write',
+  employeesRead: 'employees:read',
+  employeesWrite: 'employees:write',
+  employeeDepartmentsRead: 'employee-departments:read',
+  employeeDepartmentsWrite: 'employee-departments:write',
 
-    payrollRead: 'payroll:read',
-    payrollRun: 'payroll:run',
+  payrollRead: 'payroll:read',
+  payrollRun: 'payroll:run',
 
-    departmentsRead: 'departments:read',
-    leaveApprove: 'leave:approve',
-    rolesManage: 'roles:manage',
-    tenantsManage: 'tenants:manage',
-    auditRead: 'audit:read',
-    settingsWrite: 'settings:write',
-    reportsRead: 'reports:read',
-    billingRead: 'billing:read',
+  departmentsRead: 'departments:read',
+  leaveRead: 'leave:read',
+  leaveApprove: 'leave:approve',
 
-    //current be supported
-    manageSubscription: 'manage:subscription',
-    subscriptionsRead: 'subscriptions:read',
-    subscriptionsWrite: 'subscriptions:write',
-    //forward  guidance vs  //curent permissions from be
-    subscriptionPlansRead: 'my-subscription:read', //TODO: BE & FE change to subscription-plans:read
+  recruitmentRead: 'recruitment:read',
+  timesheetsRead: 'timesheets:read',
+  rostersRead: 'rosters:read',
+  expensesRead: 'expenses:read',
+  certificationsRead: 'certifications:read',
+  vaccinationsRead: 'vaccinations:read',
+  complianceRead: 'compliance:read',
+  travelRead: 'travel:read',
+  vehiclesRead: 'vehicles:read',
 
-  } as const
-  
-  export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
-  
-  export const ALL_PERMISSIONS: Permission[] = Object.values(PERMISSIONS)
+  companySettingsRead: 'company-settings:read',
+  companySettingsWrite: 'company-settings:write',
+
+  rolesManage: 'roles:manage',
+  tenantsManage: 'tenants:manage',
+  auditRead: 'audit:read',
+  settingsWrite: 'settings:write',
+  reportsRead: 'reports:read',
+  billingRead: 'billing:read',
+
+  manageSubscription: 'manage:subscription',
+  subscriptionsRead: 'subscriptions:read',
+  subscriptionsWrite: 'subscriptions:write',
+  subscriptionPlansRead: 'my-subscription:read', // TODO: BE & FE → subscription-plans:read
+} as const
+
+export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
+
+export const ALL_PERMISSIONS: Permission[] = Object.values(PERMISSIONS)
   

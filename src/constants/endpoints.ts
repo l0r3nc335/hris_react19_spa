@@ -227,6 +227,55 @@ export const endpoints = {
     leaveTypes: '/settings/leave-types',
     ...lifecycle('/settings'),
   },
+  company: {
+    onboarding: '/company/onboarding',
+    profile: '/company/profile',
+    divisions: {
+      list: '/company/divisions',
+      byId: id('/company/divisions'),
+      ...lifecycle('/company/divisions'),
+    },
+    groups: {
+      list: '/company/groups',
+      byId: id('/company/groups'),
+      ...lifecycle('/company/groups'),
+    },
+    locations: {
+      list: '/company/locations',
+      byId: id('/company/locations'),
+      ...lifecycle('/company/locations'),
+    },
+    employmentBasis: {
+      list: '/company/employment-basis',
+      byId: id('/company/employment-basis'),
+      ...lifecycle('/company/employment-basis'),
+    },
+    classifications: {
+      list: '/company/classifications',
+      byId: id('/company/classifications'),
+      ...lifecycle('/company/classifications'),
+    },
+    payRates: {
+      list: '/company/pay-rates',
+      byId: id('/company/pay-rates'),
+      ...lifecycle('/company/pay-rates'),
+    },
+    allowances: {
+      list: '/company/allowances',
+      byId: id('/company/allowances'),
+      ...lifecycle('/company/allowances'),
+    },
+    vaccinationTypes: {
+      list: '/company/vaccination-types',
+      byId: id('/company/vaccination-types'),
+      ...lifecycle('/company/vaccination-types'),
+    },
+    certificationTypes: {
+      list: '/company/certification-types',
+      byId: id('/company/certification-types'),
+      ...lifecycle('/company/certification-types'),
+    },
+  },
   tenants: {
     list: '/tenants',
     byId: id('/tenants'),
