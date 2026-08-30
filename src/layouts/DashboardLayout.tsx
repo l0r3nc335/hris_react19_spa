@@ -14,7 +14,7 @@ export function DashboardLayout(): React.JSX.Element {
       <aside
         className={cn(
           'hidden border-r border-sidebar-border bg-sidebar md:block md:transition-all',
-          sidebarOpen ? 'md:w-64' : 'md:w-14',
+          sidebarOpen ? 'md:w-64' : 'md:w-16',
         )}
       >
         <AppSidebar collapsed={!sidebarOpen}/>

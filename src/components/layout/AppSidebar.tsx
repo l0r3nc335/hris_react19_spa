@@ -21,10 +21,10 @@ function navLinkClassName(collapsed: boolean, isActive: boolean): string {
     return cn(
       'flex rounded-md text-sm transition-colors',
       collapsed
-        ? 'mx-auto size-9 items-center justify-center'
+        ? 'w-full items-center justify-center rounded-none'
         : 'items-center gap-2 px-3 py-2',
       isActive
-        ? 'bg-primary text-primary-foreground'
+        ? 'bg-secondary text-primary-foreground-X'
         : 'text-sidebar-foreground hover:bg-accent',
     )
 }
@@ -50,7 +50,7 @@ function SidebarNavItem({
           aria-disabled
         >
           <item.icon className={cn('h-4 w-4 shrink-0', collapsed && 'my-2 mx-auto')} />
-          {!collapsed ? item.label : null}
+          {!collapsed ? <span className="text-white">{item.label}</span> : null}
         </span>
       )
       if (collapsed) {
@@ -70,8 +70,24 @@ function SidebarNavItem({
         onClick={onNavigate}
         className={({ isActive }) => navLinkClassName(collapsed, isActive)}
       >
-        <item.icon className={cn('h-4 w-4 shrink-0', collapsed && 'my-2 mx-auto')} />
-        {!collapsed ? item.label : null}
+        {({ isActive }) => (
+          <>
+            <div
+              className={cn(
+                collapsed && 'flex w-full justify-center' ,
+                collapsed && isActive && 'bg-secondary text-primary-foreground',
+              )}
+            >
+              <item.icon
+                className={cn(
+                  'h-4 w-4 shrink-0',
+                  collapsed && 'my-1 mx-auto box-content rounded-md bg-neutral-700 p-1.5 text-white opacity-70',
+                )}
+              />
+            </div>
+            {!collapsed ? <span className="text-foreground">{item.label}</span> : null}
+          </>
+        )}
       </NavLink>
     )
   
@@ -117,7 +133,7 @@ export function AppSidebar({
         <Button
           variant="ghost"
           size="icon"
-          className="hidden md:inline-flex"
+          className="hidden md:inline-flex text-white"
           onClick={() => dispatch(toggleSidebar())}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
@@ -136,8 +152,9 @@ export function AppSidebar({
             <div className="flex h-14 items-center justify-center border-b border-sidebar-border">
               {sidebarToggle}
             </div>
+            
             <ScrollArea className="flex-1">
-              <nav className="space-y-1 p-2">
+              <nav className="space-y-1 py-2">
                 {navGroupflatItems.map((item) => (
                   <SidebarNavItem
                     key={item.path}
@@ -188,7 +205,7 @@ export function AppSidebar({
         </div>
 
         {/* FILTER MENU */}    
-        <div className="border-b border-sidebar-border p-3">
+        <div className="border-b-X border-sidebar-border p-3">
           <div className="relative">
             {/* Search Icon */}
             <Search className="absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" /> 
@@ -197,7 +214,7 @@ export function AppSidebar({
                 placeholder="Filter menu..."
                 value={searchQuery}
                 onChange={(e) => dispatch(setSidebarSearchQuery(e.target.value))}
-                className="pl-8"
+                className="pl-8 bg-input/5 border-0 "
             />
           </div>
         </div>
@@ -223,7 +240,7 @@ export function AppSidebar({
                       }
                     }}
                   >
-                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold tracking-wide text-muted-forreground uppercase hover:bg-accent/50">
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase hover:bg-accent/50 hover:text-white">
                       {group.label}
                     </CollapsibleTrigger>
 
