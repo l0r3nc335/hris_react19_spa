@@ -52,12 +52,15 @@ export function AppHeader(): React.JSX.Element {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
+
             <SheetContent side="left" className="w-64 p-0">
               <AppSidebar />
             </SheetContent>
           </Sheet>
         </div>
+
         <div className="flex items-center gap-1">
+          {/*<MessageInbox />*/}
           <Button
             variant="outline"
             size="sm"
@@ -70,8 +73,12 @@ export function AppHeader(): React.JSX.Element {
               Ctrl+K
             </kbd>
           </Button>
+
           {/*<MessageInbox />*/}
+          
           {/*<NotificationBell />*/}
+
+          {/* Dark - Light Toggle */}
           <Button variant="ghost" size="icon" onClick={toggleTheme}>
             {resolvedTheme === 'dark' ? (
               <Sun className="h-4 w-4" />
@@ -79,7 +86,11 @@ export function AppHeader(): React.JSX.Element {
               <Moon className="h-4 w-4" />
             )}
           </Button>
+          
+          {/* | Separator*/}
           <Separator orientation="vertical" className="mx-1 h-6" />
+          
+          {/* Avatar Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="gap-2 px-2">
@@ -91,20 +102,25 @@ export function AppHeader(): React.JSX.Element {
                 </span>
               </Button>
             </DropdownMenuTrigger>
+            
             <DropdownMenuContent align="end">
               <DropdownMenuItem disabled>
                 {user?.email ?? 'Not signed in'}
               </DropdownMenuItem>
+              
               <DropdownMenuSeparator />
+              
               <DropdownMenuItem onSelect={() => navigate(ROUTES.system.settings)}>
                 Settings
               </DropdownMenuItem>
+              
               <DropdownMenuItem onSelect={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+
         </div>
       </header>
       {/*<GlobalSearch />*/}

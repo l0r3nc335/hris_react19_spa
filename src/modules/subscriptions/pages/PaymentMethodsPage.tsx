@@ -52,15 +52,6 @@ export function PaymentMethodsPage(): React.JSX.Element {
     [plans, slug],
   )
 
-  const breadcrumbs = useMemo(
-    () => [
-      { label: 'Subscription Plans', path: ROUTES.subscription.plans },
-      ...(plan ? [{ label: plan.label }] : []),
-      { label: 'Payment Methods' },
-    ],
-    [plan],
-  )
-
   const monthlyBase = plan?.price ? Number(plan.price) : 0
   const monthlyAdditional = plan?.priceAdditionalUsers ? Number(plan.priceAdditionalUsers) : 0
   const annualBase = monthlyBase * 12
@@ -120,7 +111,10 @@ export function PaymentMethodsPage(): React.JSX.Element {
         title="Payment Methods"
         description="Complete your subscription using PayPal, Stripe, or 2C2P sandbox."
         icon={<Wallet className="h-5 w-5" />}
-        breadcrumbs={breadcrumbs}
+        breadcrumbs={[
+          { label: "Subscription Plan" },
+          { label: "Payment Method"}
+        ]}
       >
         <p className="text-sm text-destructive">Plan not found.</p>
         <Button className="mt-4" variant="outline" onClick={() => navigate(ROUTES.subscription.plans)}>
@@ -137,7 +131,10 @@ export function PaymentMethodsPage(): React.JSX.Element {
       title="Payment Methods"
       description="Complete your subscription using PayPal, Stripe, or 2C2P sandbox."
       icon={<Wallet className="h-5 w-5" />}
-      breadcrumbs={breadcrumbs}
+      breadcrumbs={[
+        { label: "Subscription Plan", path: ROUTES.subscription.plans },
+        { label: "Payment Method" }
+      ]}
     >
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
