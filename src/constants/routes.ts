@@ -30,6 +30,8 @@ export const ROUTES = {
 
    subscription: {
       plans: '/subscription/plans',
+      payments: '/subscription/payments',
+      billingInvoice: '/subscription/billing-invoice',
    },
 
    mySubscription: {

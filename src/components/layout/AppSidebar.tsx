@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks"
 import { usePermission } from "@/hooks/usePermission"
 import { setSidebarSearchQuery, toggleSidebar, toggleNavGroup } from "@/slices/uiSlice"
 import { Button, Input, Tooltip } from "@/ui"
-import { PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
+import { ChevronRight, PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area"
 import { NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from "@/constants/routes"
@@ -24,8 +24,8 @@ function navLinkClassName(collapsed: boolean, isActive: boolean): string {
         ? 'w-full items-center justify-center rounded-none'
         : 'items-center gap-2 px-3 py-2',
       isActive
-        ? 'bg-secondary text-primary-foreground-X'
-        : 'text-sidebar-foreground hover:bg-accent',
+        ? 'bg-secondary text-primary-foreground'
+        : 'text-muted-foreground hover:text-white hover:bg-accent/10 font-semibold-X',
     )
 }
 
@@ -40,6 +40,7 @@ function SidebarNavItem({
     onNavigate?: () => void
     disabled?: boolean
   }): React.JSX.Element {
+    /* Disabled items */
     if (disabled) {
       const content = (
         <span
@@ -75,7 +76,8 @@ function SidebarNavItem({
             <div
               className={cn(
                 collapsed && 'flex w-full justify-center' ,
-                collapsed && isActive && 'bg-secondary text-primary-foreground',
+                collapsed && isActive && 'bg-secondary text-primary-foreground text-sidebar-foreground',
+                !collapsed && isActive && 'box-content rounded-md  bg-black/20 p-1'
               )}
             >
               <item.icon
@@ -85,7 +87,7 @@ function SidebarNavItem({
                 )}
               />
             </div>
-            {!collapsed ? <span className="text-foreground">{item.label}</span> : null}
+            {!collapsed ? <span className="text-foregrounds">{item.label}</span> : null}
           </>
         )}
       </NavLink>
@@ -116,7 +118,7 @@ export function AppSidebar({
     const { can } = usePermission()
     const normalizedQuery = searchQuery.trim().toLowerCase()
 
-    /* NAVIGATION GROUPS - check permisions and filter menu*/
+    /* NAVIGATION GROUPS DATA- check permisions and filter menu*/
     const filteredGroups = NAV_GROUPS.map((group) => ({
         ...group,
         items: group.items.filter((item) => {
@@ -240,8 +242,9 @@ export function AppSidebar({
                       }
                     }}
                   >
-                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase hover:bg-accent/50 hover:text-white">
+                    <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase hover:bg-accent/5">
                       {group.label}
+                      <ChevronRight className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 [[data-state=open]_&]:rotate-90" />
                     </CollapsibleTrigger>
 
                     {/* Nav Items */}

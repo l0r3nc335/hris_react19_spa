@@ -15,7 +15,7 @@ export interface UiState {
 
 const initialState: UiState = {
   sidebarOpen: true,
-  theme: 'system',
+  theme: 'light',
   globalLoading: false,
   expandedNavGroups: DEFAULT_EXPANDED_NAV_GROUPS,
   notificationsOpen: false,

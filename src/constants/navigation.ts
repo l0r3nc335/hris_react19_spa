@@ -4,6 +4,8 @@ import {
   Users,
   Receipt,
   Sparkles,
+  CircleDollarSign,
+  ReceiptText
   /*
   BarChart3,
   UserCircle,
@@ -65,6 +67,18 @@ export const NAV_GROUPS: NavGroup[] = [
         label: 'Plans',
         path: ROUTES.subscription.plans,
         icon: Sparkles,
+        permission: PERMISSIONS.manageSubscription,
+      },
+      {
+        label: 'Payments',
+        path: ROUTES.subscription.payments,
+        icon: CircleDollarSign,
+        permission: PERMISSIONS.manageSubscription,
+      },
+      {
+        label: 'Billing & Invoice',
+        path: ROUTES.subscription.billingInvoice,
+        icon: ReceiptText,
         permission: PERMISSIONS.manageSubscription,
       },
     ]

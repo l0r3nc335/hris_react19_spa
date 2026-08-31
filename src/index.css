@@ -46,7 +46,7 @@
   --popover-foreground: oklch(0.145 0 0);                  /* text-popover-foreground, select/dialog/sheet/dropdown-menu, AppHeader */
   --primary: oklch(20.463% 0.00002 271.152);               /* bg-primary text-primary, button/badge, AppSidebar/PlanCard */
   --primary-foreground: oklch(0.985 0 0);                  /* text-primary-foreground, button/badge, AppSidebar */
-  --secondary: oklch(68.407% 0.20118 141.267);                            /* bg-secondary, button/badge, — */
+  --secondary: oklch(68.407% 0.20118 141.267);             /* bg-secondary, button/badge, — */
   --secondary-foreground: oklch(0.205 0 0);                /* text-secondary-foreground, button/badge, — */
   --muted: oklch(0.97 0 0);                                /* bg-muted, button/card-footer, AppHeader/PageHeader */
   --muted-foreground: oklch(0.708 0 0);                    /* text-muted-foreground, —, PageHeader/PlanCard/AppSidebar */
@@ -63,7 +63,7 @@
   --chart-5: oklch(0.269 0 0);                             /* bg-chart-5, —, unused */
   --radius: 0.625rem;                                        /* rounded-*, button/input/card, global radius */
   --sidebar: oklch(0.205 0 0);                            /* bg-sidebar, —, DashboardLayout */
-  --sidebar-foreground: oklch(97.101% 0.00533 16.111);     /* text-sidebar-foreground, —, AppSidebar */
+  --sidebar-foreground: oklch(0.87 0 0);                   /* text-sidebar-foreground, —, AppSidebar */
   --sidebar-primary: oklch(0.205 0 0);                     /* bg-sidebar-primary, —, unused */
   --sidebar-primary-foreground: oklch(0.985 0 0);          /* text-sidebar-primary-foreground, —, unused */
   --sidebar-accent: oklch(0.97 0 0);                       /* bg-sidebar-accent, —, unused */
