@@ -41,6 +41,7 @@ export interface NavItem {
   label: string
   path: string
   icon: LucideIcon
+  iconBoxColor?: string
   permission?: Permission
 }
 
@@ -67,18 +68,21 @@ export const NAV_GROUPS: NavGroup[] = [
         label: 'Plans',
         path: ROUTES.subscription.plans,
         icon: Sparkles,
+        iconBoxColor: 'bg-blue-500',
         permission: PERMISSIONS.manageSubscription,
       },
       {
         label: 'Payments',
         path: ROUTES.subscription.payments,
         icon: CircleDollarSign,
+        iconBoxColor: 'bg-gradient-to-b from-pink-500 to-purple-900',
         permission: PERMISSIONS.manageSubscription,
       },
       {
         label: 'Billing & Invoice',
         path: ROUTES.subscription.billingInvoice,
         icon: ReceiptText,
+        iconBoxColor: 'bg-green-500',
         permission: PERMISSIONS.manageSubscription,
       },
     ]
@@ -87,7 +91,13 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'people',
     label: 'People & Organization',
     items: [
-      { label: 'Users', path: ROUTES.people.users, icon: Users, permission: PERMISSIONS.usersRead },
+      { 
+        label: 'Users', 
+        path: ROUTES.people.users, 
+        icon: Users,
+        iconBoxColor: 'bg-amber-500', 
+        permission: PERMISSIONS.usersRead 
+      },
       //{ label: 'Employees', path: ROUTES.employees, icon: UserCircle, permission: PERMISSIONS.employeesRead },
       //{ label: 'Employee Department', path: ROUTES.employeeDepartments, icon: GitBranch, permission: PERMISSIONS.employeeDepartmentsRead },
       //{ label: 'Departments', path: ROUTES.departments, icon: Building2, permission: PERMISSIONS.departmentsRead },

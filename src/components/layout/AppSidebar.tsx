@@ -22,7 +22,7 @@ function navLinkClassName(collapsed: boolean, isActive: boolean): string {
       'flex rounded-md text-sm transition-colors',
       collapsed
         ? 'w-full items-center justify-center rounded-none'
-        : 'items-center gap-2 px-3 py-2',
+        : 'items-center gap-2 px-3 py-2 ms-2',
       isActive
         ? 'bg-secondary text-primary-foreground'
         : 'text-muted-foreground hover:text-white hover:bg-accent/10 font-semibold-X',
@@ -40,17 +40,33 @@ function SidebarNavItem({
     onNavigate?: () => void
     disabled?: boolean
   }): React.JSX.Element {
-    /* Disabled items */
+    /* Disabled items — same layout as active, red bg */
     if (disabled) {
       const content = (
         <span
           className={cn(
-            navLinkClassName(collapsed, false),
-            'cursor-not-allowed opacity-40',
+            'flex rounded-md text-sm transition-colors cursor-not-allowed opacity-40',
+            collapsed
+              ? 'w-full items-center justify-center rounded-none'
+              : 'items-center gap-2 px-3 py-2 ms-2',
+            ' text-primary-foreground',
           )}
           aria-disabled
         >
-          <item.icon className={cn('h-4 w-4 shrink-0', collapsed && 'my-2 mx-auto')} />
+          <div
+            className={cn(
+              collapsed && 'flex w-full justify-center',
+              collapsed && 'text-primary-foreground text-sidebar-foreground',
+            )}
+          >
+            <item.icon
+              className={cn(
+                'h-4.5 w-4.5 shrink-0 text-white',
+                collapsed && 'my-1 mx-auto box-content rounded-md bg-black/90 p-1.5',
+                !collapsed && 'box-content rounded-md bg-black/90 p-1 m-1.5',
+              )}
+            />
+          </div>
           {!collapsed ? <span className="text-white">{item.label}</span> : null}
         </span>
       )
@@ -77,13 +93,14 @@ function SidebarNavItem({
               className={cn(
                 collapsed && 'flex w-full justify-center' ,
                 collapsed && isActive && 'bg-secondary text-primary-foreground text-sidebar-foreground',
-                !collapsed && isActive && 'box-content rounded-md  bg-black/20 p-1'
               )}
             >
               <item.icon
                 className={cn(
-                  'h-4 w-4 shrink-0',
-                  collapsed && 'my-1 mx-auto box-content rounded-md bg-neutral-700 p-1.5 text-white opacity-70',
+                  'h-4.5 w-4.5 shrink-0 text-white',
+                  collapsed && 'my-1 mx-auto box-content rounded-md bg-black/20 p-1.5',
+                  !collapsed && 'box-content rounded-md bg-black/20 p-1 ms-2',
+                  !isActive && item.iconBoxColor,
                 )}
               />
             </div>
