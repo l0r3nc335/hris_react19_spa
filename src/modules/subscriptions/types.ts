@@ -17,6 +17,7 @@ export interface SubscriptionPlan {
   id: string
   slug: string
   label: string
+  icon?: string
   description?: string
   price?: string
   currency?: string

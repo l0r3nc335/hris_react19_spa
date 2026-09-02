@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { Check } from 'lucide-react'
+import { LucidIcon } from '@/components/LucidIcon'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CardEdgeGlow } from '@/components/animations/CardEdgeGlow'
+import { Card, CardContent } from '@/components/ui/card'
 import { formatPrice } from '@/modules/subscriptions/constants'
 import type { SubscriptionPlan } from '@/modules/subscriptions/types'
 import { subscriptionPlanPaymentMethods } from '@/utils/subscriberOnboarding'
@@ -52,69 +53,21 @@ export function PlanCard({
   }
 
   return (
-    <CardEdgeGlow className="h-full">
-      <div
-        className={cn(
-          'flex h-full flex-col p-6',
-          isDisabled && 'opacity-50',
-        )}
+    <Card className='gap-0 bg-card py-0 relative overflow-hidden'>
+      <div 
+        className='border rounded-lg m-4 px-2 py-2 flex items-center justify-between bg-slate-100 relative overflow-hidden'
       >
-        <div className="mb-4 flex items-start justify-between gap-2">
-          <div>
-            <h3 className="text-lg font-semibold text-foreground">{plan.label}</h3>
-            <Badge variant="outline" className="mt-1 uppercase tracking-wider">
-              {plan.slug}
-            </Badge>
-          </div>
-          {isCurrent ? <Badge>Current plan</Badge> : null}
-        </div>
-
-        <div className="mb-4">
-          <p className="text-3xl font-bold tracking-tight">
-            {priceDisplay}
-            {!isEnterprise ? (
-              <span className="text-base font-normal text-muted-foreground">/month</span>
-            ) : null}
-          </p>
-          {!isEnterprise ? (
-            <span className="mt-2 inline-block rounded-full border border-border/60 bg-muted/40 px-2.5 py-0.5 text-xs text-muted-foreground">
-              Billed annually
-            </span>
-          ) : null}
-        </div>
-
-        <ul className="mb-6 flex-1 space-y-2 text-sm text-muted-foreground">
-          {plan.defaultUserCount != null ? (
-            <li className="flex items-start gap-2">
-              <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-              <span>Up to {plan.defaultUserCount.toLocaleString()} users included</span>
-            </li>
-          ) : null}
-          {plan.priceAdditionalUsers && Number(plan.priceAdditionalUsers) > 0 ? (
-            <li className="flex items-start gap-2">
-              <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-              <span>
-                {formatPrice(plan.priceAdditionalUsers, plan.currency)}/month per additional user
-              </span>
-            </li>
-          ) : null}
-          {bullets.map((bullet) => (
-            <li key={bullet} className="flex items-start gap-2">
-              <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-              <span>{bullet}</span>
-            </li>
-          ))}
-        </ul>
-
-        <Button
-          className="mt-auto w-full"
-          variant="outline"
-          disabled={isEnterprise || isCurrent || isDisabled}
-          onClick={handleCta}
-        >
-          {ctaLabel}
-        </Button>
+        <h3 className="text-lg font-semibold font-heading z-10">{plan.label}</h3>
+        <LucidIcon
+          icon={plan.icon}
+          size={45}
+          className="absolute -bottom-2 -right-2 text-slate-500 pointer-events-none mr-5"
+        />
       </div>
-    </CardEdgeGlow>
+
+      <CardContent className='pb-4'>
+        Content content
+      </CardContent>
+    </Card>
   )
 }

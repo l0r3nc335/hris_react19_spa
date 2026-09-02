@@ -38,7 +38,7 @@
 }
 
 :root {
-  --background: oklch(1 0 0);                              /* bg-background, —, body/AuthLayout */
+  --background: oklch(6.72% 0.00001 271.152 / 0.096);      /* bg-background, —, body/AuthLayout */
   --foreground: oklch(0% 0 0);                             /* text-foreground, —, PageHeader/PlanCard */
   --card: oklch(1 0 0);                                    /* bg-card, card, CardEdgeGlow/LoginPage */
   --card-foreground: oklch(0.145 0 0);                     /* text-card-foreground, card/alert, LoginPage */

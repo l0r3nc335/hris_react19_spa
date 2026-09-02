@@ -44,7 +44,7 @@ export function AppHeader(): React.JSX.Element {
 
   return (
     <>
-      <header className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4">
+      <header className="flex h-14 shrink-0 items-center justify-between px-4 bg-white">
         <div className="flex min-w-0 flex-1 items-center gap-2">          
           <Sheet>
             <SheetTrigger asChild>
@@ -53,7 +53,7 @@ export function AppHeader(): React.JSX.Element {
               </Button>
             </SheetTrigger>
 
-            <SheetContent side="left" className="w-64 p-0">
+            <SheetContent side="left" className="w-64 p-0  bg-sidebar p-0 text-sidebar-foreground">
               <AppSidebar />
             </SheetContent>
           </Sheet>

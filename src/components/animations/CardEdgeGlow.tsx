@@ -178,7 +178,7 @@ export function CardEdgeGlow({
         {children}
       </div>
       
-      {showGlow && false ? (
+      {showGlow ? (
         <div className="pointer-events-none absolute -inset-px z-20" aria-hidden>
           <Canvas
             orthographic

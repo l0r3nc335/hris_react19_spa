@@ -6,6 +6,7 @@ interface PlanApiRecord {
   id: string
   name: string
   label: string
+  icon?: string
   description?: string
   price?: string
   currency?: string
@@ -24,6 +25,7 @@ function mapPlan(record: PlanApiRecord): SubscriptionPlan {
     id: record.id,
     slug: record.name,
     label: record.label,
+    icon: record.icon,
     description: record.description,
     price: record.price,
     currency: record.currency,
