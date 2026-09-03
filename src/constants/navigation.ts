@@ -68,7 +68,7 @@ export const NAV_GROUPS: NavGroup[] = [
         label: 'Plans',
         path: ROUTES.subscription.plans,
         icon: Sparkles,
-        iconBoxColor: 'bg-blue-500',
+        iconBoxColor: 'bg-blue-500',  
         permission: PERMISSIONS.manageSubscription,
       },
       {

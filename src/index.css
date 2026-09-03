@@ -38,18 +38,23 @@
 }
 
 :root {
+  --primary: oklch(0.62 0.19 260);                         /* bg-primary */
+
+  --primary-foreground: oklch(0.985 0 0);                  /* text-primary-foreground */
+  --muted-foreground: oklch(0.708 0 0);                    /* text-muted-foreground */
+  
   --background: oklch(6.72% 0.00001 271.152 / 0.096);      /* bg-background, —, body/AuthLayout */
   --foreground: oklch(0% 0 0);                             /* text-foreground, —, PageHeader/PlanCard */
   --card: oklch(1 0 0);                                    /* bg-card, card, CardEdgeGlow/LoginPage */
   --card-foreground: oklch(0.145 0 0);                     /* text-card-foreground, card/alert, LoginPage */
   --popover: oklch(1 0 0);                                 /* bg-popover, select/dialog/sheet/dropdown-menu, AppHeader */
   --popover-foreground: oklch(0.145 0 0);                  /* text-popover-foreground, select/dialog/sheet/dropdown-menu, AppHeader */
-  --primary: oklch(20.463% 0.00002 271.152);               /* bg-primary text-primary, button/badge, AppSidebar/PlanCard */
-  --primary-foreground: oklch(0.985 0 0);                  /* text-primary-foreground, button/badge, AppSidebar */
+
+  
   --secondary: oklch(68.407% 0.20118 141.267);             /* bg-secondary, button/badge, — */
   --secondary-foreground: oklch(0.205 0 0);                /* text-secondary-foreground, button/badge, — */
   --muted: oklch(0.97 0 0);                                /* bg-muted, button/card-footer, AppHeader/PageHeader */
-  --muted-foreground: oklch(0.708 0 0);                    /* text-muted-foreground, —, PageHeader/PlanCard/AppSidebar */
+
   --accent: oklch(0.97 0 0);                               /* bg-accent, select/dropdown-menu, AppSidebar/PublicNavbar */
   --accent-foreground: oklch(0.205 0 0);                   /* text-accent-foreground, select/dropdown-menu, PublicNavbar */
   --destructive: oklch(0.577 0.245 27.325);                /* text-destructive bg-destructive, button/badge, PlansPage/LoginPage */
@@ -62,25 +67,31 @@
   --chart-4: oklch(0.371 0 0);                             /* bg-chart-4, —, unused */
   --chart-5: oklch(0.269 0 0);                             /* bg-chart-5, —, unused */
   --radius: 0.625rem;                                        /* rounded-*, button/input/card, global radius */
-  --sidebar: oklch(0.205 0 0);                            /* bg-sidebar, —, DashboardLayout */
+  --sidebar: oklch(0.205 0 0);                             /* bg-sidebar, —, DashboardLayout */
   --sidebar-foreground: oklch(0.87 0 0);                   /* text-sidebar-foreground, —, AppSidebar */
   --sidebar-primary: oklch(0.205 0 0);                     /* bg-sidebar-primary, —, unused */
   --sidebar-primary-foreground: oklch(0.985 0 0);          /* text-sidebar-primary-foreground, —, unused */
   --sidebar-accent: oklch(0.97 0 0);                       /* bg-sidebar-accent, —, unused */
   --sidebar-accent-foreground: oklch(0.205 0 0);           /* text-sidebar-accent-foreground, —, unused */
-  --sidebar-border: oklch(1 0 0 / 10%);                      /* border-sidebar-border, —, DashboardLayout/AppSidebar */
+  --sidebar-border: oklch(1 0 0 / 10%);                    /* border-sidebar-border, —, DashboardLayout/AppSidebar */
   --sidebar-ring: oklch(0.708 0 0);                        /* ring-sidebar-ring, —, unused */
 }
 
 .dark {
+  --primary: oklch(0.62 0.19 260);                         /* bg-primary */
+  --background: oklch(25.197% 0.00003 271.152);            /* bg-background, body/AuthLayout */
+
+  --muted-foreground: oklch(0.708 0 0);                    /* text-muted-foreground, —, PageHeader/PlanCard/AppSidebar */
+  --primary-foreground: oklch(0.205 0 0);                  /* text-primary-foreground, button/badge, AppSidebar */
+
   --color-background: #0f172a;                             /* bg-background, —, body/AuthLayout */
   --color-foreground: #f8fafc;                             /* text-foreground, —, PageHeader/PlanCard */
   --color-primary: #3b82f6;                                /* bg-primary text-primary, button/badge, AppSidebar/PlanCard */
-  --color-primary-foreground: #ffffff;                     /* text-primary-foreground, button/badge, AppSidebar */
+  
   --color-secondary: #1e293b;                              /* bg-secondary, button/badge, — */
   --color-secondary-foreground: #f8fafc;                   /* text-secondary-foreground, button/badge, — */
   --color-muted: #1e293b;                                  /* bg-muted, button/card-footer, AppHeader/PageHeader */
-  --color-muted-foreground: #94a3b8;                       /* text-muted-foreground, —, PageHeader/PlanCard/AppSidebar */
+  
   --color-accent: #1e293b;                                 /* bg-accent, select/dropdown-menu, AppSidebar/PublicNavbar */
   --color-accent-foreground: #f8fafc;                      /* text-accent-foreground, select/dropdown-menu, PublicNavbar */
   --color-destructive: #ef4444;                            /* text-destructive bg-destructive, button/badge, PlansPage/LoginPage */
@@ -97,18 +108,17 @@
   --color-sidebar-border: #334155;                         /* border-sidebar-border, —, DashboardLayout/AppSidebar */
   --color-sidebar-accent: #7aa3e7;                         /* bg-sidebar-accent, —, unused */
   --color-sidebar-accent-foreground: #f8fafc;              /* text-sidebar-accent-foreground, —, unused */
-  --background: oklch(0.145 0 0);                          /* bg-background, —, body/AuthLayout */
+
   --foreground: oklch(0.985 0 0);                          /* text-foreground, —, PageHeader/PlanCard h1-h6, p, span tags */
   --card: oklch(0.205 0 0);                                /* bg-card, card, CardEdgeGlow/LoginPage */
   --card-foreground: oklch(0.985 0 0);                     /* text-card-foreground, card/alert, LoginPage */
   --popover: oklch(0.205 0 0);                             /* bg-popover, select/dialog/sheet/dropdown-menu, AppHeader */
   --popover-foreground: oklch(0.985 0 0);                  /* text-popover-foreground, select/dialog/sheet/dropdown-menu, AppHeader */
-  --primary: oklch(0.922 0 0);                             /* bg-primary text-primary, button/badge, AppSidebar/PlanCard AppSidebar higlighter*/
-  --primary-foreground: oklch(0.205 0 0);                  /* text-primary-foreground, button/badge, AppSidebar */
-  --secondary: oklch(0.269 0 0);                           /* bg-secondary, button/badge, — */
+
+  --secondary: oklch(68.407% 0.20118 141.267);             /* bg-secondary, button/badge, — */
   --secondary-foreground: oklch(0.985 0 0);                /* text-secondary-foreground, button/badge, — */
   --muted: oklch(0.269 0 0);                               /* bg-muted, button/card-footer, AppHeader/PageHeader */
-  --muted-foreground: oklch(0.708 0 0);                    /* text-muted-foreground, —, PageHeader/PlanCard/AppSidebar */
+
   --accent: oklch(0.269 0 0);                              /* bg-accent, select/dropdown-menu, AppSidebar/PublicNavbar */
   --accent-foreground: oklch(0.985 0 0);                   /* text-accent-foreground, select/dropdown-menu, PublicNavbar */
   --destructive: oklch(0.704 0.191 22.216);                /* text-destructive bg-destructive, button/badge, PlansPage/LoginPage */

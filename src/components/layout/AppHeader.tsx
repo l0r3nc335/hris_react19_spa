@@ -44,7 +44,7 @@ export function AppHeader(): React.JSX.Element {
 
   return (
     <>
-      <header className="flex h-14 shrink-0 items-center justify-between px-4 bg-white">
+      <header className="flex h-14 shrink-0 items-center justify-between px-4 bg-white dark:bg-background dark:border-b">
         <div className="flex min-w-0 flex-1 items-center gap-2">          
           <Sheet>
             <SheetTrigger asChild>
@@ -93,18 +93,21 @@ export function AppHeader(): React.JSX.Element {
           {/* Avatar Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="gap-2 px-2">
+              <Button variant="ghost" className="gap-2 px-2 dark:hover:bg-sidebar-accent">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback>{initials}</AvatarFallback>
+                  <AvatarFallback className='text-secondary'>{initials}</AvatarFallback>
                 </Avatar>
-                <span className="hidden text-sm text-muted-foreground sm:inline">
+                <span className="hidden text-sm sm:inline  max-w-30 truncate">
                   {user ? `${user.firstName} ${user.lastName}` : 'Guest'}
                 </span>
               </Button>
             </DropdownMenuTrigger>
             
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem disabled>
+            <DropdownMenuContent
+              align="end"
+              className="w-auto min-w-(--radix-dropdown-menu-trigger-width) max-w-72"
+            >
+              <DropdownMenuItem disabled className="min-w-0 truncate">
                 {user?.email ?? 'Not signed in'}
               </DropdownMenuItem>
               

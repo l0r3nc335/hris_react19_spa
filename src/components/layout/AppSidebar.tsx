@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks"
 import { usePermission } from "@/hooks/usePermission"
 import { setSidebarSearchQuery, toggleSidebar, toggleNavGroup } from "@/slices/uiSlice"
 import { Button, Input, Tooltip } from "@/ui"
-import { ChevronRight, PanelLeftClose, PanelLeftOpen, Search, Settings } from "lucide-react"
+import { ChevronRight, PanelLeftClose, PanelLeftOpen, Search, Settings, UserRoundCog } from "lucide-react"
 import { ScrollArea } from "../ui/scroll-area"
 import { NavLink, useLocation } from 'react-router-dom'
 import { ROUTES } from "@/constants/routes"
@@ -24,7 +24,7 @@ function navLinkClassName(collapsed: boolean, isActive: boolean): string {
         ? 'w-full items-center justify-center rounded-none'
         : 'items-center gap-2 px-3 py-2 ms-2',
       isActive
-        ? 'bg-secondary text-primary-foreground'
+        ? 'bg-secondary text-white'
         : 'text-muted-foreground hover:text-white hover:bg-accent/10 font-semibold-X',
     )
 }
@@ -207,33 +207,36 @@ export function AppSidebar({
         {/* SIDE BAR HEADER */}
         <div
             className={cn(
-                'flex h-14 items-center gap-2 border-b border-sidebar-border px-2',
+                'flex h-14 items-center gap-2  px-2',
                 collapsed ? 'justify-center' : 'justify-between px-4',
             )}
         >
-          <span
-              className={cn(
-              'overflow-hidden whitespace-nowrap font-semibold text-sidebar-foreground',
-              'transition-[max-width,opacity] duration-300 ease-in-out',
-              collapsed ? 'max-w-0 opacity-0' : 'max-w-[12rem] opacity-100',
-              )}
-          >
-              HRIS Enterprise
-          </span>
+          <div className="flex min-w-0 items-center gap-2 text-sidebar-foreground">
+            <UserRoundCog className="size-8 shrink-0" strokeWidth={2.25} />
+            <span
+                className={cn(
+                'overflow-hidden whitespace-nowrap font-semibold',
+                'transition-[max-width,opacity] duration-300 ease-in-out',
+                collapsed ? 'max-w-0 opacity-0' : 'max-w-[12rem] opacity-100',
+                )}
+            >
+                HRIS Enterprise
+            </span>
+          </div>
           {sidebarToggle}
         </div>
 
         {/* FILTER MENU */}    
-        <div className="border-b-X border-sidebar-border p-3">
+        <div className="p-3 mt-4">
           <div className="relative">
             {/* Search Icon */}
             <Search className="absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" /> 
             {/* Search input */}
             <Input
-                placeholder="Filter menu..."
+                placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => dispatch(setSidebarSearchQuery(e.target.value))}
-                className="pl-8 bg-input/5 border-0 "
+                className="pl-8 bg-input/5 border-0 text-white placeholder:text-muted-foreground"
             />
           </div>
         </div>

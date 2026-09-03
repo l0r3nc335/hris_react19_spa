@@ -25,7 +25,7 @@ export function PageHeader({
           ) : null}
         </div>
         {icon ? (
-          <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/30 text-muted-foreground">
+          <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
             {icon}
           </div>
         ) : null}
